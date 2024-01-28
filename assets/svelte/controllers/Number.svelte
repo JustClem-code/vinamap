@@ -8,7 +8,7 @@
 </script>
 
 <div>
-    <h2 class="text-3xl">nombre aléatoire {number}</h2>
+    <h2 class="text-3xl font-bold ">nombre aléatoire {number}</h2>
     <Nested number={number}/>
 
     <ul>

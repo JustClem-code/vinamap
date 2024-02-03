@@ -15,7 +15,7 @@ class PizzaController extends AbstractController
     public function createPizza(EntityManagerInterface $entityManager): Response
     {
         $pizza = new VictoriousPizza();
-        $pizza->setName('Rebochonnade');
+        $pizza->setName('Reblo-cochonne');
 
         // tell Doctrine you want to (eventually) save the Product (no queries yet)
         $entityManager->persist($pizza);

@@ -1,0 +1,13 @@
+{# templates/pizza/pizzaslist.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}
+	Pizza
+{% endblock %}
+{% block body %}
+	<div {{ svelte_component('Pizza', { 'pizzaCollection': pizzaCollection, 'createPizz': createPizz}) }}></div>
+	{# <div class="grid gap-4 md:grid-cols-3 sm:grid-cols-2">
+		{% for pizza in pizzas %}
+			{{ pizza.name }}
+		{% endfor %}
+	</div> #}
+{% endblock %}

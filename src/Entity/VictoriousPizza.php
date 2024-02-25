@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\VictoriousPizzaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VictoriousPizzaRepository::class)]
 class VictoriousPizza
@@ -14,6 +15,7 @@ class VictoriousPizza
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
     private ?string $name = null;
 
     public function getId(): ?int

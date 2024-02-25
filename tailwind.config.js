@@ -2,6 +2,7 @@
 module.exports = {
   content: [
     "./assets/**/*.js",
+    "./assets/**/*.svelte",
     "./templates/**/*.html.twig",
   ],
   theme: {

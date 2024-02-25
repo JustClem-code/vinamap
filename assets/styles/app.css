@@ -3,6 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    background-color: lightblue;
+html {
+    box-sizing: border-box;
 }
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+html,body{
+    overflow-x: hidden;
+  }

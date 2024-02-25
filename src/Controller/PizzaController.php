@@ -7,6 +7,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 use App\Entity\VictoriousPizza;
 use Doctrine\ORM\EntityManagerInterface;
@@ -41,7 +43,6 @@ class PizzaController extends AbstractController
     #[Route('/getpizzas', name: 'get_list')]
     public function getAllPizzas(EntityManagerInterface $entityManager): Response
     {
-
         $repository = $entityManager->getRepository(VictoriousPizza::class);
 
         $pizzas = $repository->findAll();
@@ -62,11 +63,18 @@ class PizzaController extends AbstractController
      * @Route("/createpizza", methods="POST")
      */
     #[Route('/createpizza', name: 'create_pizza')]
-    public function createPizza(Request $request, EntityManagerInterface $entityManager): Response
+    public function createPizza(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
     {
+
+
 
         $pizza = new VictoriousPizza();
         $pizza->setName($request->getPayload()->get('name'));
+
+        $errors = $validator->validate($pizza);
+        if (count($errors) > 0) {
+            dd('errors');
+        }
 
         // tell Doctrine you want to (eventually) save the Product (no queries yet)
         $entityManager->persist($pizza);

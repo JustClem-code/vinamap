@@ -2,19 +2,21 @@
 
 namespace App\Controller;
 
+use App\Controller\Trait\ApiTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 use App\Entity\VictoriousPizza;
+use App\Repository\VictoriousPizzaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class PizzaController extends AbstractController
 {
+    use ApiTrait;
 
     #[Route('/pizza/{id}', name: 'pizza_show')]
     public function show(EntityManagerInterface $entityManager, int $id): Response
@@ -40,32 +42,26 @@ class PizzaController extends AbstractController
     /**
      * @Route("/getpizzas", methods="GET")
      */
-    #[Route('/getpizzas', name: 'get_list')]
-    public function getAllPizzas(EntityManagerInterface $entityManager): Response
+    #[Route('/getpizzas', name: 'get_list', methods: ['GET'])]
+    public function getAllPizzas(EntityManagerInterface $entityManager)
     {
         $repository = $entityManager->getRepository(VictoriousPizza::class);
 
-        $pizzas = $repository->findAll();
+        $pizzas = $repository->transformAll();
 
-        $pizzaCollection = [];
-
-        foreach ($pizzas as $pizza) {
-            $pizzaCollection[] = array(
-                'id' => $pizza->getId(),
-                'name' => $pizza->getName(),
-            );
-        }
-
-        return new JsonResponse($pizzaCollection);
+        return $this->respond($pizzas);
     }
 
     /**
      * @Route("/createpizza", methods="POST")
      */
-    #[Route('/createpizza', name: 'create_pizza')]
-    public function createPizza(Request $request, EntityManagerInterface $entityManager, ValidatorInterface $validator): Response
-    {
-
+    #[Route('/createpizza', name: 'create_pizza', methods: ['POST'])]
+    public function createPizza(
+        Request $request,
+        VictoriousPizzaRepository $victoriousPizzaRepository,
+        EntityManagerInterface $entityManager,
+        ValidatorInterface $validator
+    ) {
 
 
         $pizza = new VictoriousPizza();
@@ -73,8 +69,12 @@ class PizzaController extends AbstractController
 
         $errors = $validator->validate($pizza);
         if (count($errors) > 0) {
-            dd('errors');
+            foreach ($errors as $violation) {
+                $message = $violation->getMessage();
+            }
+            return $this->respondValidationError((string) $message);
         }
+
 
         // tell Doctrine you want to (eventually) save the Product (no queries yet)
         $entityManager->persist($pizza);
@@ -82,28 +82,42 @@ class PizzaController extends AbstractController
         // actually executes the queries (i.e. the INSERT query)
         $entityManager->flush();
 
-        return new Response('Saved new pizza with id ' . $pizza->getName());
+        return $this->respondCreated($victoriousPizzaRepository->transform($pizza));
+        /* return new Response('Saved new pizza with name ' . $pizza->getName()); */
     }
 
     /**
      * @Route("/updatepizza/{id}", methods="POST")
      */
-    #[Route('/updatepizza/{id}', name: 'update_pizza')]
-    public function updatePizza(Request $request, EntityManagerInterface $entityManager, int $id): Response
-    {
+    #[Route('/updatepizza/{id}', name: 'update_pizza', methods: ['POST'])]
+    public function updatePizza(
+        Request $request,
+        VictoriousPizzaRepository $victoriousPizzaRepository,
+        EntityManagerInterface $entityManager,
+        int $id,
+        ValidatorInterface $validator
+    ) {
         $pizza = $entityManager->getRepository(VictoriousPizza::class)->find($id);
         $pizza->setName($request->getPayload()->get('name'));
 
+        $errors = $validator->validate($pizza);
+        if (count($errors) > 0) {
+            foreach ($errors as $violation) {
+                $message = $violation->getMessage();
+            }
+            return $this->respondValidationError((string) $message);
+        }
+
         $entityManager->flush();
 
-        return $this->redirectToRoute('lucky_number');
-
+        return $this->respondCreated($victoriousPizzaRepository->transform($pizza));
+        /* return new Response('Update pizza with name ' . $pizza->getName()); */
     }
 
     /**
      * @Route("/deletepizza/{id}", methods="POST")
      */
-    #[Route('/deletepizza/{id}', name: 'delete_pizza')]
+    #[Route('/deletepizza/{id}', name: 'delete_pizza', methods: ['POST'])]
     public function deletePizza(EntityManagerInterface $entityManager, int $id): Response
     {
         $pizza = $entityManager->getRepository(VictoriousPizza::class)->find($id);
@@ -111,7 +125,6 @@ class PizzaController extends AbstractController
         $entityManager->remove($pizza);
         $entityManager->flush();
 
-        return $this->redirectToRoute('lucky_number');
-
+        return new Response('Delete pizza with name ' . $pizza->getName());
     }
 }

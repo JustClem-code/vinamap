@@ -21,28 +21,24 @@ class VictoriousPizzaRepository extends ServiceEntityRepository
         parent::__construct($registry, VictoriousPizza::class);
     }
 
-//    /**
-//     * @return VictoriousPizza[] Returns an array of VictoriousPizza objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('v.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function transform(VictoriousPizza $pizza)
+    {
+        return [
+                'id' => (int) $pizza->getId(),
+                'name' => (string )$pizza->getName(),
+        ];
+    }
 
-//    public function findOneBySomeField($value): ?VictoriousPizza
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function transformAll()
+    {
+        $pizzas = $this->findAll();
+        $pizzaCollection = [];
+
+        foreach ($pizzas as $pizza) {
+            $pizzaCollection[] = $this->transform($pizza);
+        }
+
+        return $pizzaCollection;
+    }
+
 }

@@ -5,8 +5,13 @@ namespace App\Entity;
 use App\Repository\VictoriousPizzaRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: VictoriousPizzaRepository::class)]
+#[UniqueEntity(
+    'name',
+    message: 'This pizza already exist!'
+)]
 class VictoriousPizza
 {
     #[ORM\Id]
@@ -22,6 +27,7 @@ class VictoriousPizza
     {
         return $this->id;
     }
+
 
     public function getName(): ?string
     {

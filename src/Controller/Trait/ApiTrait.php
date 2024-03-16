@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Trait;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ApiController
+trait ApiTrait
 {
 
     /**
@@ -75,5 +75,41 @@ class ApiController
     public function respondUnauthorized($message = 'Not authorized!')
     {
         return $this->setStatusCode(401)->respondWithErrors($message);
+    }
+
+    /**
+     * Returns a 422 Unprocessable Entity
+     *
+     * @param string $message
+     *
+     * @return Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function respondValidationError($message = 'Validation errors')
+    {
+        return $this->setStatusCode(422)->respondWithErrors($message);
+    }
+
+    /**
+     * Returns a 404 Not Found
+     *
+     * @param string $message
+     *
+     * @return Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function respondNotFound($message = 'Not found!')
+    {
+        return $this->setStatusCode(404)->respondWithErrors($message);
+    }
+
+    /**
+     * Returns a 201 Created
+     *
+     * @param array $data
+     *
+     * @return Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function respondCreated($data = [])
+    {
+        return $this->setStatusCode(201)->respond($data);
     }
 }

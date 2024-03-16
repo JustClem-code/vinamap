@@ -7,7 +7,6 @@
         createPizza(name);
         name = "";
     }
-
 </script>
 
 <h2 class="text-3xl font-bold text-slate-950">Créer votre pizza</h2>

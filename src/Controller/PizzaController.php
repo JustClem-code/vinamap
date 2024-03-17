@@ -42,7 +42,7 @@ class PizzaController extends AbstractController
     /**
      * @Route("/getpizzas", methods="GET")
      */
-    #[Route('/getpizzas', name: 'get_list', methods: ['GET'])]
+    #[Route('/getpizzas', name: 'get_pizzas_list', methods: ['GET'])]
     public function getAllPizzas(EntityManagerInterface $entityManager)
     {
         $repository = $entityManager->getRepository(VictoriousPizza::class);

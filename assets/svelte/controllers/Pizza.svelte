@@ -98,7 +98,7 @@
     {/if}
 
     <div class="py-4">
-        <AddPizzaForm {createPizza} />
+        <AddPizzaForm addForm={createPizza} />
     </div>
 
     <h2 class="text-3xl font-bold text-slate-950">Toutes nos pizzas</h2>

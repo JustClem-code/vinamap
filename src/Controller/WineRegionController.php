@@ -62,7 +62,6 @@ class WineRegionController extends AbstractController
         ValidatorInterface $validator
     ) {
 
-
         $wineregion = new WineRegion();
         $wineregion->setName($request->getPayload()->get('name'));
 

@@ -2,17 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\VictoriousPizzaRepository;
+use App\Repository\AppellationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[ORM\Entity(repositoryClass: VictoriousPizzaRepository::class)]
+#[ORM\Entity(repositoryClass: AppellationRepository::class)]
 #[UniqueEntity(
     'name',
-    message: 'This pizza already exist!'
+    message: 'This appellation already exist!'
 )]
-class VictoriousPizza
+class Appellation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,7 +27,6 @@ class VictoriousPizza
     {
         return $this->id;
     }
-
 
     public function getName(): ?string
     {

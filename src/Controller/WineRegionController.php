@@ -117,6 +117,11 @@ class WineRegionController extends AbstractController
     public function deleteWineRegion(EntityManagerInterface $entityManager, int $id): Response
     {
         $wineregion = $entityManager->getRepository(WineRegion::class)->find($id);
+        $appellations = $wineregion->getAppellations();
+
+        foreach ($appellations as $ap) {
+            $wineregion->removeAppellation($ap);
+        }
 
         $entityManager->remove($wineregion);
         $entityManager->flush();

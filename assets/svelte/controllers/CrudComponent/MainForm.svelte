@@ -11,6 +11,9 @@
     export let controller;
     export let title;
     export let placeholderCreate;
+    export let optionItemsTitle;
+
+    export let optionItems;
 
     let dialog;
     let showdialogEdit = false;
@@ -29,11 +32,13 @@
         const response = await axios.get(`https://localhost/get${controller}s`);
         items = response.data;
         onLoad = false;
+        console.log("item", items);
     }
 
-    async function createItem(name) {
+    async function createItem(name, optionPost) {
+        console.log("create", optionPost);
         await axios
-            .post(`https://localhost/create${controller}`, { name })
+            .post(`https://localhost/create${controller}`, { name, optionPost })
             .then((res) => {
                 isSuccess = true;
                 alertString = "Created" + " " + res.data.name;
@@ -41,7 +46,7 @@
                 getItems();
             })
             .catch((error) => {
-                console.log(error);
+                console.log("error create", error);
                 isSuccess = false;
                 alertString = error.response.data.errors;
                 resetAlert();
@@ -123,6 +128,8 @@
             addForm={createItem}
             titleForm={title}
             placeholder={placeholderCreate}
+            {optionItemsTitle}
+            {optionItems}
         />
     </div>
 
@@ -153,6 +160,12 @@
                         {i + 1}
                         {item.name}
                     </div>
+
+                    {#if item.wineregion != null}
+                        <div class="pl-4">
+                            {item.wineregion}
+                        </div>
+                    {/if}
                     <div class="flex items-center gap-1">
                         <button
                             on:click={() => editDialogItem(item.id, item.name)}

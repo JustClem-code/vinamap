@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use App\Entity\Appellation;
+use App\Entity\WineRegion;
 use App\Repository\AppellationRepository;
+use App\Repository\WineRegionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AppellationController extends AbstractController
@@ -44,12 +46,16 @@ class AppellationController extends AbstractController
     public function createAppellation(
         Request $request,
         AppellationRepository $AppellationRepository,
+        WineRegionRepository $WineRegionRepository,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator
     ) {
+        $wineregion = $WineRegionRepository->find($request->getPayload()->get('optionPost'));
 
         $appellation = new Appellation();
         $appellation->setName($request->getPayload()->get('name'));
+        $appellation->setWineregion($wineregion);
+
 
         $errors = $validator->validate($appellation);
         if (count($errors) > 0) {

@@ -23,6 +23,9 @@ class Appellation
     #[Assert\NotBlank]
     private ?string $name = null;
 
+    #[ORM\ManyToOne(inversedBy: 'appellations')]
+    private ?WineRegion $wineregion = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -36,6 +39,18 @@ class Appellation
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getWineregion(): ?WineRegion
+    {
+        return $this->wineregion;
+    }
+
+    public function setWineregion(?WineRegion $wineregion): static
+    {
+        $this->wineregion = $wineregion;
 
         return $this;
     }

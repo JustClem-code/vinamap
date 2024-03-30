@@ -8,7 +8,7 @@
 </script>
 
 <div
-    class="fixed top-2 left-2 right-2 px-4 py-3 rounded {color}"
+    class="fixed top-20 left-2 right-2 px-4 py-3 rounded {color}"
     role="alert"
 >
     <strong class="font-bold">{beforeMsg}</strong>

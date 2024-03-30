@@ -22,6 +22,7 @@
     let items = [];
     let itemIdDialog;
     let itemNameDialog;
+    let itemOptionDialog;
 
     onMount(() => {
         onLoad = true;
@@ -36,7 +37,6 @@
     }
 
     async function createItem(name, optionPost) {
-        console.log("create", optionPost);
         await axios
             .post(`https://localhost/create${controller}`, { name, optionPost })
             .then((res) => {
@@ -53,12 +53,12 @@
             });
     }
 
-    async function editItem(id, name) {
+    async function editItem(id, name, optionPost) {
         await axios
-            .post(`https://localhost/update${controller}/${id}`, { name })
+            .post(`https://localhost/update${controller}/${id}`, { name, optionPost })
             .then((res) => {
                 isSuccess = true;
-                alertString = "Updated" + "" + res.data.name;
+                alertString = "Updated" + " " + res.data.name;
                 resetAlert();
                 getItems();
                 showdialogEdit = false;
@@ -86,10 +86,11 @@
             });
     }
 
-    function editDialogItem(itemId, itemName) {
+    function editDialogItem(itemId, itemName, itemOption) {
         showdialogEdit = true;
         itemIdDialog = itemId;
         itemNameDialog = itemName;
+        itemOptionDialog = itemOption;
         dialog.showModal();
     }
 
@@ -161,14 +162,14 @@
                         {item.name}
                     </div>
 
-                    {#if item.wineregion != null}
+                    {#if item.wineregionId != null}
                         <div class="pl-4">
-                            {item.wineregion}
+                            {item.wineregionName}
                         </div>
                     {/if}
                     <div class="flex items-center gap-1">
                         <button
-                            on:click={() => editDialogItem(item.id, item.name)}
+                            on:click={() => editDialogItem(item.id, item.name, item?.wineregionId)}
                             class="bg-transparent hover:bg-teal-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent rounded"
                         >
                             Modifier
@@ -191,6 +192,9 @@
             <EditForm
                 editId={itemIdDialog}
                 name={itemNameDialog}
+                option={itemOptionDialog}
+                {optionItemsTitle}
+                {optionItems}
                 closeModal={() => dialog.close()}
                 {editItem}
             />

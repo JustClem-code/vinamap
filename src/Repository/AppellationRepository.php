@@ -26,7 +26,8 @@ class AppellationRepository extends ServiceEntityRepository
         return [
             'id' => (int) $appellation->getId(),
             'name' => (string) $appellation->getName(),
-            'wineregion' => (string) $appellation->getWineregion()?->getName(),
+            'wineregionId' => (int) $appellation->getWineregion()?->getId(),
+            'wineregionName' => (string) $appellation->getWineregion()?->getName(),
         ];
     }
 

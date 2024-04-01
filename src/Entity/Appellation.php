@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AppellationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -25,6 +27,14 @@ class Appellation
 
     #[ORM\ManyToOne(inversedBy: 'appellations')]
     private ?WineRegion $wineregion = null;
+
+    #[ORM\ManyToMany(targetEntity: GrapeVariety::class, inversedBy: 'appellations')]
+    private Collection $grapevariety;
+
+    public function __construct()
+    {
+        $this->grapevariety = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -51,6 +61,30 @@ class Appellation
     public function setWineregion(?WineRegion $wineregion): static
     {
         $this->wineregion = $wineregion;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GrapeVariety>
+     */
+    public function getGrapevariety(): Collection
+    {
+        return $this->grapevariety;
+    }
+
+    public function addGrapevariety(GrapeVariety $grapevariety): static
+    {
+        if (!$this->grapevariety->contains($grapevariety)) {
+            $this->grapevariety->add($grapevariety);
+        }
+
+        return $this;
+    }
+
+    public function removeGrapevariety(GrapeVariety $grapevariety): static
+    {
+        $this->grapevariety->removeElement($grapevariety);
 
         return $this;
     }

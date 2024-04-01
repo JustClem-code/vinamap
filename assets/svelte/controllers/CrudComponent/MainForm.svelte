@@ -11,9 +11,11 @@
     export let controller;
     export let title;
     export let placeholderCreate;
-    export let optionItemsTitle;
 
+    export let optionItemsTitle;
     export let optionItems;
+    export let optionItemsTitle2;
+    export let optionItems2;
 
     let dialog;
     let showdialogEdit = false;
@@ -23,6 +25,7 @@
     let itemIdDialog;
     let itemNameDialog;
     let itemOptionDialog;
+    let itemOptionDialog2;
 
     onMount(() => {
         onLoad = true;
@@ -36,9 +39,14 @@
         console.log("item", items);
     }
 
-    async function createItem(name, optionPost) {
+    async function createItem(name, optionPost, optionPost2) {
+
         await axios
-            .post(`https://localhost/create${controller}`, { name, optionPost })
+            .post(`https://localhost/create${controller}`, {
+                name,
+                optionPost,
+                optionPost2,
+            })
             .then((res) => {
                 isSuccess = true;
                 alertString = "Created" + " " + res.data.name;
@@ -46,16 +54,19 @@
                 getItems();
             })
             .catch((error) => {
-                console.log("error create", error);
                 isSuccess = false;
                 alertString = error.response.data.errors;
                 resetAlert();
             });
     }
 
-    async function editItem(id, name, optionPost) {
+    async function editItem(id, name, optionPost, optionPost2) {
         await axios
-            .post(`https://localhost/update${controller}/${id}`, { name, optionPost })
+            .post(`https://localhost/update${controller}/${id}`, {
+                name,
+                optionPost,
+                optionPost2,
+            })
             .then((res) => {
                 isSuccess = true;
                 alertString = "Updated" + " " + res.data.name;
@@ -86,11 +97,12 @@
             });
     }
 
-    function editDialogItem(itemId, itemName, itemOption) {
+    function editDialogItem(itemId, itemName, itemOption, itemOption2) {
         showdialogEdit = true;
         itemIdDialog = itemId;
         itemNameDialog = itemName;
         itemOptionDialog = itemOption;
+        itemOptionDialog2 = itemOption2;
         dialog.showModal();
     }
 
@@ -131,6 +143,8 @@
             placeholder={placeholderCreate}
             {optionItemsTitle}
             {optionItems}
+            {optionItemsTitle2}
+            {optionItems2}
         />
     </div>
 
@@ -167,9 +181,24 @@
                             {item.wineregionName}
                         </div>
                     {/if}
+                    {#if item.grapevarietyCollection != null}
+                        <div class="flex pl-4 gap-1">
+                            {#each item.grapevarietyCollection as grape, i}
+                            <div>
+                                {grape.grapevarietyName}
+                            </div>
+                            {/each}
+                        </div>
+                    {/if}
                     <div class="flex items-center gap-1">
                         <button
-                            on:click={() => editDialogItem(item.id, item.name, item?.wineregionId)}
+                            on:click={() =>
+                                editDialogItem(
+                                    item.id,
+                                    item.name,
+                                    item?.wineregionId,
+                                    item?.grapevarietyCollection,
+                                )}
                             class="bg-transparent hover:bg-teal-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent rounded"
                         >
                             Modifier
@@ -193,8 +222,11 @@
                 editId={itemIdDialog}
                 name={itemNameDialog}
                 option={itemOptionDialog}
+                option2={itemOptionDialog2}
                 {optionItemsTitle}
                 {optionItems}
+                {optionItemsTitle2}
+                {optionItems2}
                 closeModal={() => dialog.close()}
                 {editItem}
             />

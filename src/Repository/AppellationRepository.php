@@ -21,6 +21,20 @@ class AppellationRepository extends ServiceEntityRepository
         parent::__construct($registry, Appellation::class);
     }
 
+    public function getGrapeCollection($ap) {
+        $grapevariety = $ap->getGrapevariety();
+        $grapeCollection = [];
+
+        foreach ($grapevariety as $grape) {
+            $grapeCollection[] = [
+                'grapevarietyId' => $grape->getId(),
+                'grapevarietyName' => $grape->getName(),
+            ];
+        }
+
+        return $grapeCollection;
+    }
+
     public function transform(Appellation $appellation)
     {
         return [
@@ -28,6 +42,7 @@ class AppellationRepository extends ServiceEntityRepository
             'name' => (string) $appellation->getName(),
             'wineregionId' => (int) $appellation->getWineregion()?->getId(),
             'wineregionName' => (string) $appellation->getWineregion()?->getName(),
+            'grapevarietyCollection' => (array) $this->getGrapeCollection($appellation),
         ];
     }
 

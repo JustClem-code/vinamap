@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use App\Entity\Appellation;
 use App\Repository\AppellationRepository;
+use App\Repository\GrapeVarietyRepository;
 use App\Repository\WineRegionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -18,14 +19,14 @@ class AppellationController extends AbstractController
 {
     use ApiTrait;
 
-
     #[Route('/appellations', name: 'appellations_list')]
     public function showAll(): Response
     {
+        /* dd('test'); */
         return $this->render('/vinamap/appellationsList.html.twig');
     }
 
-     /**
+    /**
      * @Route("/getappellations", methods="GET")
      */
     #[Route('/getappellations', name: 'get_appellations_list', methods: ['GET'])]
@@ -46,15 +47,26 @@ class AppellationController extends AbstractController
         Request $request,
         AppellationRepository $AppellationRepository,
         WineRegionRepository $WineRegionRepository,
+        GrapeVarietyRepository $GrapeVarietyRepository,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator
     ) {
         $wineregion = $WineRegionRepository->find($request->getPayload()->get('optionPost'));
 
+        $grapevarietyCollection = $request->getPayload()->all('optionPost2');
+
+        $grapeArray = [];
+        foreach ($grapevarietyCollection as $grape) {
+            $grapeArray[] = $GrapeVarietyRepository->find($grape);
+        }
+
         $appellation = new Appellation();
         $appellation->setName($request->getPayload()->get('name'));
         $appellation->setWineregion($wineregion);
 
+        foreach ($grapeArray as $grapevariety) {
+            $appellation->addGrapevariety($grapevariety);
+        }
 
         $errors = $validator->validate($appellation);
         if (count($errors) > 0) {
@@ -82,15 +94,27 @@ class AppellationController extends AbstractController
         Request $request,
         AppellationRepository $AppellationRepository,
         WineRegionRepository $WineRegionRepository,
+        GrapeVarietyRepository $GrapeVarietyRepository,
         EntityManagerInterface $entityManager,
         int $id,
         ValidatorInterface $validator
     ) {
         $wineregion = $WineRegionRepository->find($request->getPayload()->get('optionPost'));
 
+        $grapevarietyCollection = $request->getPayload()->all('optionPost2');
+
+        $grapeArray = [];
+        foreach ($grapevarietyCollection as $grape) {
+            $grapeArray[] = $GrapeVarietyRepository->find($grape);
+        }
+
         $appellation = $entityManager->getRepository(Appellation::class)->find($id);
         $appellation->setName($request->getPayload()->get('name'));
         $appellation->setWineregion($wineregion);
+
+        foreach ($grapeArray as $grapevariety) {
+            $appellation->addGrapevariety($grapevariety);
+        }
 
         $errors = $validator->validate($appellation);
         if (count($errors) > 0) {

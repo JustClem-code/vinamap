@@ -16,10 +16,21 @@
     export let closeModal;
 
     $: optionValue = option;
-    $: optionValue2 = option2;
 
-    console.log("option2", option2);
-    console.log("optionValue2", optionValue2);
+    let optionValue2 = [];
+    let selectedOptions;
+    let multiselectOptions;
+
+    if (optionItems2 != null) {
+        multiselectOptions = optionItems2.map((x) => ({
+            label: x.name,
+            value: x.id,
+        }));
+        selectedOptions = option2.map((x) => ({
+            label: x.grapevarietyName,
+            value: x.grapevarietyId,
+        }));
+    }
 
     onMount(() => {
         const element1 = document.getElementById("first-input-edit");
@@ -54,7 +65,7 @@
             class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
         >
             <div
-                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+                class="relative transform rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
             >
                 <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                     <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
@@ -90,7 +101,7 @@
 
                             {#if optionItems != null}
                                 <div class="flex flex-wrap mb-6">
-                                    <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                                    <div class="w-full">
                                         <label
                                             class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                             for="grid-state"
@@ -127,7 +138,7 @@
                             {/if}
                             {#if optionItems2 != null}
                                 <div class="flex flex-wrap mb-6">
-                                    <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                                    <div class="w-full">
                                         <label
                                             class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                             for="grid-state"
@@ -135,41 +146,16 @@
                                             {optionItemsTitle2}
                                         </label>
                                         <div class="relative">
-                                            <select
-                                                bind:value={option2}
-                                                selected={option2}
-                                                multiple
-                                                class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                                id="grid-state"
-                                            >
-                                                {#each optionItems2 as optonItem}
-                                                    <option value={optonItem.id}
-                                                        >{optonItem.name}</option
-                                                    >
-                                                {/each}
-                                            </select>
-                                            <div
-                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
-                                            >
-                                                <svg
-                                                    class="fill-current h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    ><path
-                                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                                                    /></svg
-                                                >
-                                            </div>
+                                            <MultiSelect
+                                                bind:value={optionValue2}
+                                                options={multiselectOptions}
+                                                selected={selectedOptions}
+                                                placeholder={optionItemsTitle2}
+                                            />
                                         </div>
                                     </div>
                                 </div>
                             {/if}
-                            <MultiSelect
-                                id="fruits"
-                                options={option2}
-                                placeholder="Which fruits do you like?"
-                                maxSelect={4}
-                            />
 
                             <div>
                                 <button

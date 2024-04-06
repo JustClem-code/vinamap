@@ -22,7 +22,6 @@ class AppellationController extends AbstractController
     #[Route('/appellations', name: 'appellations_list')]
     public function showAll(): Response
     {
-        /* dd('test'); */
         return $this->render('/vinamap/appellationsList.html.twig');
     }
 
@@ -57,7 +56,7 @@ class AppellationController extends AbstractController
 
         $grapeArray = [];
         foreach ($grapevarietyCollection as $grape) {
-            $grapeArray[] = $GrapeVarietyRepository->find($grape);
+            $grapeArray[] = $GrapeVarietyRepository->find($grape['value']);
         }
 
         $appellation = new Appellation();
@@ -105,10 +104,17 @@ class AppellationController extends AbstractController
 
         $grapeArray = [];
         foreach ($grapevarietyCollection as $grape) {
-            $grapeArray[] = $GrapeVarietyRepository->find($grape);
+            $grapeArray[] = $GrapeVarietyRepository->find($grape['value']);
         }
 
         $appellation = $entityManager->getRepository(Appellation::class)->find($id);
+
+        $grapeCollection = $appellation->getGrapevariety();
+
+        foreach ($grapeCollection as $grape) {
+            $appellation->removeGrapevariety($grape);
+        }
+
         $appellation->setName($request->getPayload()->get('name'));
         $appellation->setWineregion($wineregion);
 

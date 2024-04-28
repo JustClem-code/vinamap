@@ -1,8 +1,10 @@
 <script>
     import axios from "axios";
     import { onMount } from "svelte";
+    import { writable, derived } from "svelte/store";
 
     import AddForm from "./AddForm.svelte";
+    import ListFilter from "./ListFilter.svelte";
     import EditForm from "./EditForm.svelte";
     import DeleteForm from "./DeleteForm.svelte";
     import Dialog from "../UI/Dialog.svelte";
@@ -16,6 +18,8 @@
     export let optionItems;
     export let optionItemsTitle2;
     export let optionItems2;
+    export let optionItemsTitle3;
+    export let optionItems3;
 
     let dialog;
     let showdialogEdit = false;
@@ -26,26 +30,92 @@
     let itemNameDialog;
     let itemOptionDialog;
     let itemOptionDialog2;
+    let itemOptionDialog3;
 
     onMount(() => {
         onLoad = true;
         getItems();
     });
 
+    $: items.sort((a, b) =>
+        a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+    );
+    // TEST FILTER STORE
+
+    const apiData = writable([]);
+
+    // TEST FILTER STORE
+
+    // FILTER
+
+    let filterValue = [];
+    let filterValue2 = [];
+    let filterValue3 = [];
+
+    $: filterItems = items;
+
+    function regionFilter(ar) {
+        filterItems = ar.filter((item) => {
+            return filterValue.some((f) => {
+                return f.value === item.wineregionId;
+            });
+        });
+    }
+
+    function grapeFilter(ar) {
+        filterItems = ar.filter(({ grapevarietyCollection }) => {
+            return grapevarietyCollection.some(({ grapevarietyId }) => {
+                return filterValue2.some((f) => {
+                    return f.value === grapevarietyId;
+                });
+            });
+        });
+    }
+
+    function subRegionFilter(ar) {
+        filterItems = ar.filter((item) => {
+            return filterValue3.some((f) => {
+                return f.value === item.subwineregionId;
+            });
+        });
+    }
+
+    $: if (filterValue.length) {
+        regionFilter(items);
+
+        if (filterValue2.length) {
+            grapeFilter(filterItems);
+        }
+
+        if (filterValue3.length) {
+            subRegionFilter(filterItems);
+        }
+    } else if (filterValue2.length) {
+        grapeFilter(items);
+    } else if (filterValue3.length) {
+        subRegionFilter(items);
+    } else {
+        filterItems = items;
+    }
+
+    // FILTER
+
     async function getItems() {
         const response = await axios.get(`https://localhost/get${controller}s`);
         items = response.data;
+        apiData.set(response.data);
         onLoad = false;
         console.log("item", items);
+        return items;
     }
 
-    async function createItem(name, optionPost, optionPost2) {
-
+    async function createItem(name, optionPost, optionPost2, optionPost3) {
         await axios
             .post(`https://localhost/create${controller}`, {
                 name,
                 optionPost,
                 optionPost2,
+                optionPost3,
             })
             .then((res) => {
                 isSuccess = true;
@@ -60,12 +130,13 @@
             });
     }
 
-    async function editItem(id, name, optionPost, optionPost2) {
+    async function editItem(id, name, optionPost, optionPost2, optionPost3) {
         await axios
             .post(`https://localhost/update${controller}/${id}`, {
                 name,
                 optionPost,
                 optionPost2,
+                optionPost3,
             })
             .then((res) => {
                 isSuccess = true;
@@ -97,12 +168,19 @@
             });
     }
 
-    function editDialogItem(itemId, itemName, itemOption, itemOption2) {
+    function editDialogItem(
+        itemId,
+        itemName,
+        itemOption,
+        itemOption2,
+        itemOption3,
+    ) {
         showdialogEdit = true;
         itemIdDialog = itemId;
         itemNameDialog = itemName;
         itemOptionDialog = itemOption;
         itemOptionDialog2 = itemOption2;
+        itemOptionDialog3 = itemOption3;
         dialog.showModal();
     }
 
@@ -125,11 +203,33 @@
 
     $: alertString = "";
     $: isSuccess = false;
-
-    $: items.sort((a, b) =>
-        a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
-    );
 </script>
+
+<h1>Whiskey Drinks Menu</h1>
+<ul>
+    {#each $apiData as drinkName}
+        <li>{drinkName.name}</li>
+    {/each}
+</ul>
+
+<!-- STORE -->
+
+<!-- {#each Object.entries($filterOptions) as [column, values]}
+    {column}
+    <select bind:value={$filter[column]}>
+        <option value={null}></option>
+        {#each values as value}
+            <option {value}>{value}</option>
+        {/each}
+    </select>
+{/each}
+
+{#each $filteredPosts as post}
+    <p>
+        {post.id} - {post.name}
+    </p>
+{/each} -->
+<!-- STORE -->
 
 <div class="p-10">
     {#if alertString != ""}
@@ -145,6 +245,22 @@
             {optionItems}
             {optionItemsTitle2}
             {optionItems2}
+            {optionItemsTitle3}
+            {optionItems3}
+        />
+    </div>
+
+    <div class="py-4">
+        <ListFilter
+            {optionItemsTitle}
+            {optionItems}
+            {optionItemsTitle2}
+            {optionItems2}
+            {optionItemsTitle3}
+            {optionItems3}
+            bind:filterValue
+            bind:filterValue2
+            bind:filterValue3
         />
     </div>
 
@@ -167,7 +283,7 @@
                 </li>
             {/each}
         {:else}
-            {#each items as item, i}
+            {#each filterItems as item, i}
                 <li
                     class="flex flex-col sm:flex-row justify-between items-center gap-1 p-1 my-2 border-2 hover:border-gray-300 rounded"
                 >
@@ -181,12 +297,17 @@
                             {item.wineregionName}
                         </div>
                     {/if}
+                    {#if item.subwineregionId != null}
+                        <div class="pl-4">
+                            {item.subwineregionName}
+                        </div>
+                    {/if}
                     {#if item.grapevarietyCollection != null}
                         <div class="flex pl-4 gap-1">
                             {#each item.grapevarietyCollection as grape, i}
-                            <div>
-                                {grape.grapevarietyName}
-                            </div>
+                                <div>
+                                    {grape.grapevarietyName}
+                                </div>
                             {/each}
                         </div>
                     {/if}
@@ -198,6 +319,7 @@
                                     item.name,
                                     item?.wineregionId,
                                     item?.grapevarietyCollection,
+                                    item?.subwineregionId,
                                 )}
                             class="bg-transparent hover:bg-teal-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent rounded"
                         >
@@ -223,10 +345,13 @@
                 name={itemNameDialog}
                 option={itemOptionDialog}
                 option2={itemOptionDialog2}
+                option3={itemOptionDialog3}
                 {optionItemsTitle}
                 {optionItems}
                 {optionItemsTitle2}
                 {optionItems2}
+                {optionItemsTitle3}
+                {optionItems3}
                 closeModal={() => dialog.close()}
                 {editItem}
             />

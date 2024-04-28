@@ -1,0 +1,8 @@
+{# templates/vinamap/wineregionslist.html.html.twig #}
+{% extends 'base.html.twig' %}
+{% block title %}
+	Sub wine regions
+{% endblock %}
+{% block body %}
+	<div {{ svelte_component('DataManagement/SubWineRegions') }}></div>
+{% endblock %}

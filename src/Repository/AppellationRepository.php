@@ -42,6 +42,8 @@ class AppellationRepository extends ServiceEntityRepository
             'name' => (string) $appellation->getName(),
             'wineregionId' => (int) $appellation->getWineregion()?->getId(),
             'wineregionName' => (string) $appellation->getWineregion()?->getName(),
+            'subwineregionId' => (int) $appellation->getSubwineregion()?->getId(),
+            'subwineregionName' => (string) $appellation->getSubwineregion()?->getName(),
             'grapevarietyCollection' => (array) $this->getGrapeCollection($appellation),
         ];
     }

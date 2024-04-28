@@ -123,6 +123,12 @@ class WineRegionController extends AbstractController
             $wineregion->removeAppellation($ap);
         }
 
+        $subwineregions = $wineregion->getSubWineRegions();
+
+        foreach ($subwineregions as $sub) {
+            $wineregion->removeSubWineRegion($sub);
+        }
+
         $entityManager->remove($wineregion);
         $entityManager->flush();
 

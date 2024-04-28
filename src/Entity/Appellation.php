@@ -31,6 +31,9 @@ class Appellation
     #[ORM\ManyToMany(targetEntity: GrapeVariety::class, inversedBy: 'appellations')]
     private Collection $grapevariety;
 
+    #[ORM\ManyToOne(inversedBy: 'appellations')]
+    private ?SubWineRegion $subwineregion = null;
+
     public function __construct()
     {
         $this->grapevariety = new ArrayCollection();
@@ -85,6 +88,18 @@ class Appellation
     public function removeGrapevariety(GrapeVariety $grapevariety): static
     {
         $this->grapevariety->removeElement($grapevariety);
+
+        return $this;
+    }
+
+    public function getSubwineregion(): ?SubWineRegion
+    {
+        return $this->subwineregion;
+    }
+
+    public function setSubwineregion(?SubWineRegion $subwineregion): static
+    {
+        $this->subwineregion = $subwineregion;
 
         return $this;
     }

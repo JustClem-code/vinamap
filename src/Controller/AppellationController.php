@@ -13,6 +13,7 @@ use App\Entity\Appellation;
 use App\Repository\AppellationRepository;
 use App\Repository\GrapeVarietyRepository;
 use App\Repository\WineRegionRepository;
+use App\Repository\SubWineRegionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AppellationController extends AbstractController
@@ -46,6 +47,7 @@ class AppellationController extends AbstractController
         Request $request,
         AppellationRepository $AppellationRepository,
         WineRegionRepository $WineRegionRepository,
+        SubWineRegionRepository $SubWineRegionRepository,
         GrapeVarietyRepository $GrapeVarietyRepository,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator
@@ -53,6 +55,8 @@ class AppellationController extends AbstractController
         $wineregion = $WineRegionRepository->find($request->getPayload()->get('optionPost'));
 
         $grapevarietyCollection = $request->getPayload()->all('optionPost2');
+
+        $subwineregion = $SubWineRegionRepository->find($request->getPayload()->get('optionPost3'));
 
         $grapeArray = [];
         foreach ($grapevarietyCollection as $grape) {
@@ -62,6 +66,7 @@ class AppellationController extends AbstractController
         $appellation = new Appellation();
         $appellation->setName($request->getPayload()->get('name'));
         $appellation->setWineregion($wineregion);
+        $appellation->setSubwineregion($subwineregion);
 
         foreach ($grapeArray as $grapevariety) {
             $appellation->addGrapevariety($grapevariety);
@@ -93,6 +98,7 @@ class AppellationController extends AbstractController
         Request $request,
         AppellationRepository $AppellationRepository,
         WineRegionRepository $WineRegionRepository,
+        SubWineRegionRepository $SubWineRegionRepository,
         GrapeVarietyRepository $GrapeVarietyRepository,
         EntityManagerInterface $entityManager,
         int $id,
@@ -101,6 +107,8 @@ class AppellationController extends AbstractController
         $wineregion = $WineRegionRepository->find($request->getPayload()->get('optionPost'));
 
         $grapevarietyCollection = $request->getPayload()->all('optionPost2');
+
+        $subwineregion = $SubWineRegionRepository->find($request->getPayload()->get('optionPost3'));
 
         $grapeArray = [];
         foreach ($grapevarietyCollection as $grape) {
@@ -117,6 +125,7 @@ class AppellationController extends AbstractController
 
         $appellation->setName($request->getPayload()->get('name'));
         $appellation->setWineregion($wineregion);
+        $appellation->setSubwineregion($subwineregion);
 
         foreach ($grapeArray as $grapevariety) {
             $appellation->addGrapevariety($grapevariety);

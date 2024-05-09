@@ -25,26 +25,23 @@
     let showdialogEdit = false;
     let showdialogDelete = false;
     let onLoad = false;
-    let items = [];
     let itemIdDialog;
     let itemNameDialog;
     let itemOptionDialog;
     let itemOptionDialog2;
     let itemOptionDialog3;
 
+    const items = writable([]);
+
     onMount(() => {
+        console.log(dataManagement.options);
         onLoad = true;
         getItems();
     });
 
-    $: items.sort((a, b) =>
+    $: $items.sort((a, b) =>
         a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
     );
-    // TEST FILTER STORE
-
-    const apiData = writable([]);
-
-    // TEST FILTER STORE
 
     // FILTER
 
@@ -52,12 +49,12 @@
     let filterValue2 = [];
     let filterValue3 = [];
 
-    $: filterItems = items;
+    $: filterItems = $items;
 
-    function regionFilter(ar) {
-        filterItems = ar.filter((item) => {
-            return filterValue.some((f) => {
-                return f.value === item.wineregionId;
+    function regionFilter(itemsArray, filterArray) {
+        filterItems = itemsArray.filter((item) => {
+            return filterArray.some((f) => {
+                return Object.values(item).includes(f.label);
             });
         });
     }
@@ -72,30 +69,26 @@
         });
     }
 
-    function subRegionFilter(ar) {
-        filterItems = ar.filter((item) => {
-            return filterValue3.some((f) => {
-                return f.value === item.subwineregionId;
-            });
-        });
-    }
-
     $: if (filterValue.length) {
-        regionFilter(items);
+        regionFilter($items, filterValue);
 
         if (filterValue2.length) {
             grapeFilter(filterItems);
         }
 
         if (filterValue3.length) {
-            subRegionFilter(filterItems);
+            regionFilter(filterItems, filterValue3);
         }
     } else if (filterValue2.length) {
-        grapeFilter(items);
+        grapeFilter($items);
+
+        if (filterValue3.length) {
+            regionFilter(filterItems, filterValue3);
+        }
     } else if (filterValue3.length) {
-        subRegionFilter(items);
+        regionFilter($items, filterValue3);
     } else {
-        filterItems = items;
+        filterItems = $items;
     }
 
     // FILTER
@@ -204,32 +197,6 @@
     $: alertString = "";
     $: isSuccess = false;
 </script>
-
-<h1>Whiskey Drinks Menu</h1>
-<ul>
-    {#each $apiData as drinkName}
-        <li>{drinkName.name}</li>
-    {/each}
-</ul>
-
-<!-- STORE -->
-
-<!-- {#each Object.entries($filterOptions) as [column, values]}
-    {column}
-    <select bind:value={$filter[column]}>
-        <option value={null}></option>
-        {#each values as value}
-            <option {value}>{value}</option>
-        {/each}
-    </select>
-{/each}
-
-{#each $filteredPosts as post}
-    <p>
-        {post.id} - {post.name}
-    </p>
-{/each} -->
-<!-- STORE -->
 
 <div class="p-10">
     {#if alertString != ""}

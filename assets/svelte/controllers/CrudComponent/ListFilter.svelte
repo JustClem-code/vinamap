@@ -1,5 +1,4 @@
 <script>
-    import { onMount } from "svelte";
     import MultiSelect from "svelte-multiselect";
 
     export let optionItemsTitle;
@@ -12,14 +11,6 @@
     export let filterValue;
     export let filterValue2;
     export let filterValue3;
-
-    $: console.log("filter", filterValue);
-    $: console.log("filter", filterValue2);
-
-    onMount(async () => {
-        const element1 = document.getElementById("first-input-create");
-        element1.focus();
-    });
 
     let multiselectOptions;
     $: if (optionItems != null) {
@@ -42,7 +33,6 @@
             value: x.id,
         }));
     }
-
 </script>
 
 <h2 class="text-3xl font-bold text-slate-950 mb-2">Filtrer</h2>

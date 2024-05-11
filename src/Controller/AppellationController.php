@@ -52,11 +52,13 @@ class AppellationController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator
     ) {
-        $wineregion = $WineRegionRepository->find($request->getPayload()->get('optionPost'));
+        $formData = $request->getPayload()->all('formData');
 
-        $grapevarietyCollection = $request->getPayload()->all('optionPost2');
+        $wineregion = $WineRegionRepository->find($formData['value']);
 
-        $subwineregion = $SubWineRegionRepository->find($request->getPayload()->get('optionPost3'));
+        $grapevarietyCollection = $formData['value2'];
+
+        $subwineregion = $SubWineRegionRepository->find($formData['value3']);
 
         $grapeArray = [];
         foreach ($grapevarietyCollection as $grape) {
@@ -64,7 +66,7 @@ class AppellationController extends AbstractController
         }
 
         $appellation = new Appellation();
-        $appellation->setName($request->getPayload()->get('name'));
+        $appellation->setName($formData['name']);
         $appellation->setWineregion($wineregion);
         $appellation->setSubwineregion($subwineregion);
 
@@ -79,7 +81,6 @@ class AppellationController extends AbstractController
             }
             return $this->respondValidationError((string) $message);
         }
-
 
         // tell Doctrine you want to (eventually) save the Product (no queries yet)
         $entityManager->persist($appellation);
@@ -104,11 +105,13 @@ class AppellationController extends AbstractController
         int $id,
         ValidatorInterface $validator
     ) {
-        $wineregion = $WineRegionRepository->find($request->getPayload()->get('optionPost'));
+        $formData = $request->getPayload()->all('formData');
 
-        $grapevarietyCollection = $request->getPayload()->all('optionPost2');
+        $wineregion = $WineRegionRepository->find($formData['optionValue']);
 
-        $subwineregion = $SubWineRegionRepository->find($request->getPayload()->get('optionPost3'));
+        $grapevarietyCollection = $formData['optionValue2'];
+
+        $subwineregion = $SubWineRegionRepository->find($formData['optionValue3']);
 
         $grapeArray = [];
         foreach ($grapevarietyCollection as $grape) {
@@ -123,7 +126,7 @@ class AppellationController extends AbstractController
             $appellation->removeGrapevariety($grape);
         }
 
-        $appellation->setName($request->getPayload()->get('name'));
+        $appellation->setName($formData['name']);
         $appellation->setWineregion($wineregion);
         $appellation->setSubwineregion($subwineregion);
 

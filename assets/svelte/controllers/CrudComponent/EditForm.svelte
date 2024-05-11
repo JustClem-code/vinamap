@@ -2,54 +2,55 @@
     import { onMount } from "svelte";
     import MultiSelect from "svelte-multiselect";
 
+    export let currentItem;
+    export let dataOptions;
     export let editItem;
-    export let name;
-    export let editId;
-
-    export let option;
-    export let optionItemsTitle;
-    export let optionItems;
-    export let option2;
-    export let optionItemsTitle2;
-    export let optionItems2;
-    export let option3;
-    export let optionItemsTitle3;
-    export let optionItems3;
-
     export let closeModal;
-
-    $: optionValue = option;
-    $: optionValue3 = option3;
-
-    let optionValue2 = [];
-    let selectedOptions;
-    let multiselectOptions;
-
-    let optionItem3Filter = [];
-    $: if (optionItems3 != null) {
-        optionItem3Filter = optionItems3.filter(
-            (item) => item.wineregionId === optionValue,
-        );
-    }
-
-    if (optionItems2 != null) {
-        multiselectOptions = optionItems2.map((x) => ({
-            label: x.name,
-            value: x.id,
-        }));
-        selectedOptions = option2.map((x) => ({
-            label: x.grapevarietyName,
-            value: x.grapevarietyId,
-        }));
-    }
 
     onMount(() => {
         const element1 = document.getElementById("first-input-edit");
         element1.focus();
     });
 
+    $: option = currentItem?.wineregionId;
+    $: option3 = currentItem?.subwineregionId;
+
+    $: optionValue = option;
+    $: optionValue3 = option3;
+
+    let optionValue2 = [];
+
+    let selectedOptions;
+    let multiselectOptions;
+
+    let optionItem3Filter = [];
+    $: if (dataOptions.items3 != null) {
+        optionItem3Filter = dataOptions.items3.filter(
+            (item) => item.wineregionId === optionValue
+        );
+    }
+
+    if (dataOptions.items2 != null) {
+        multiselectOptions = dataOptions.items2.map((x) => ({
+            label: x.name,
+            value: x.id,
+        }));
+        selectedOptions = currentItem?.grapevarietyCollection.map((x) => ({
+            label: x.grapevarietyName,
+            value: x.grapevarietyId,
+        }));
+    }
+
     function submitForm() {
-        editItem(editId, name, optionValue, optionValue2, optionValue3);
+        let formData = {
+            id: currentItem.id,
+            name: currentItem.name,
+            optionValue,
+            optionValue2,
+            optionValue3
+        }
+        console.log("edit", formData);
+        editItem(formData);
     }
 
     function submit(event) {
@@ -101,23 +102,23 @@
                                     </label>
                                     <input
                                         class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                        bind:value={name}
+                                        bind:value={currentItem.name}
                                         id="first-input-edit"
                                         type="text"
-                                        placeholder={name}
+                                        placeholder={currentItem.name}
                                         required
                                     />
                                 </div>
                             </div>
 
-                            {#if optionItems != null}
+                            {#if dataOptions.items != null}
                                 <div class="flex flex-wrap mb-6">
                                     <div class="w-full">
                                         <label
                                             class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                             for="grid-state"
                                         >
-                                            {optionItemsTitle}
+                                            {dataOptions.itemsTitle}
                                         </label>
                                         <div class="relative">
                                             <select
@@ -125,9 +126,9 @@
                                                 class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                                 id="grid-state"
                                             >
-                                                {#each optionItems as optonItem}
-                                                    <option value={optonItem.id}
-                                                        >{optonItem.name}</option
+                                                {#each dataOptions.items as optionItem}
+                                                    <option value={optionItem.id}
+                                                        >{optionItem.name}</option
                                                     >
                                                 {/each}
                                             </select>
@@ -154,7 +155,7 @@
                                             class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                             for="grid-state"
                                         >
-                                            {optionItemsTitle3}
+                                            {dataOptions.itemsTitle3}
                                         </label>
                                         <div class="relative">
                                             <select
@@ -184,21 +185,21 @@
                                     </div>
                                 </div>
                             {/if}
-                            {#if optionItems2 != null}
+                            {#if dataOptions.items2 != null}
                                 <div class="flex flex-wrap mb-6">
                                     <div class="w-full">
                                         <label
                                             class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                             for="grid-state"
                                         >
-                                            {optionItemsTitle2}
+                                            {dataOptions.itemsTitle2}
                                         </label>
                                         <div class="relative">
                                             <MultiSelect
                                                 bind:value={optionValue2}
                                                 options={multiselectOptions}
                                                 selected={selectedOptions}
-                                                placeholder={optionItemsTitle2}
+                                                placeholder={dataOptions.itemsTitle2}
                                             />
                                         </div>
                                     </div>

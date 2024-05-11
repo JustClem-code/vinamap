@@ -61,9 +61,10 @@ class WineRegionController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator
     ) {
+        $formData = $request->getPayload()->all('formData');
 
         $wineregion = new WineRegion();
-        $wineregion->setName($request->getPayload()->get('name'));
+        $wineregion->setName($formData['name']);
 
         $errors = $validator->validate($wineregion);
         if (count($errors) > 0) {
@@ -94,8 +95,10 @@ class WineRegionController extends AbstractController
         int $id,
         ValidatorInterface $validator
     ) {
+        $formData = $request->getPayload()->all('formData');
+
         $wineregion = $entityManager->getRepository(WineRegion::class)->find($id);
-        $wineregion->setName($request->getPayload()->get('name'));
+        $wineregion->setName($formData['name']);
 
         $errors = $validator->validate($wineregion);
         if (count($errors) > 0) {

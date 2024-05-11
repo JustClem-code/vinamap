@@ -1,12 +1,12 @@
 <script>
     export let title;
     export let deleteItem;
-    export let editId;
+    export let id;
     export let closeModal;
 
     function submit(event) {
         if (event.key === "Enter") {
-            deleteItem(editId);
+            deleteItem(id);
         }
     }
 </script>
@@ -39,7 +39,7 @@
                             Supprimer {title} ?
                         </h3>
                         <form
-                            on:submit|preventDefault={deleteItem(editId)}
+                            on:submit|preventDefault={deleteItem(id)}
                             class="w-full"
                         >
                             <div class="flex items-center justify-between py-2">

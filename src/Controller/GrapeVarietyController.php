@@ -46,9 +46,10 @@ class GrapeVarietyController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator
     ) {
+        $formData = $request->getPayload()->all('formData');
 
         $grapevariety = new GrapeVariety();
-        $grapevariety->setName($request->getPayload()->get('name'));
+        $grapevariety->setName($formData['name']);
 
         $errors = $validator->validate($grapevariety);
         if (count($errors) > 0) {
@@ -79,9 +80,10 @@ class GrapeVarietyController extends AbstractController
         int $id,
         ValidatorInterface $validator
     ) {
+        $formData = $request->getPayload()->all('formData');
 
         $grapevariety = $entityManager->getRepository(GrapeVariety::class)->find($id);
-        $grapevariety->setName($request->getPayload()->get('name'));
+        $grapevariety->setName($formData['name']);
 
         $errors = $validator->validate($grapevariety);
         if (count($errors) > 0) {

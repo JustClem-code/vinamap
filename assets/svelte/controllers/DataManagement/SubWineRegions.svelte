@@ -2,16 +2,21 @@
     import axios from "axios";
     import { onMount } from "svelte";
 
-
     import MainForm from "../CrudComponent/MainForm.svelte";
 
-    let controller = "subwineregion";
-    let title = "Sous-région";
-    let placeholderCreate = "La Côte de Beaune";
-
-    let optionItemsTitle = "Région viticole"
-
-    let optionItems =[];
+    let dataManagement = {
+        controller: "subwineregion",
+        title: "Sous-région",
+        placeholderCreate: "La Côte de Beaune",
+        options: {
+            itemsTitle: "Région viticole",
+            itemsTitle2: "",
+            itemsTitle3: "",
+            items: null,
+            items2: null,
+            items3: null,
+        },
+    };
 
     onMount(() => {
         getWineregion();
@@ -19,8 +24,8 @@
 
     async function getWineregion() {
         const response = await axios.get(`https://localhost/getwineregions`);
-        optionItems = response.data;
+        dataManagement.options.items = response.data;
     }
 </script>
 
-<MainForm {controller} {title} {placeholderCreate} {optionItems} {optionItemsTitle} />
+<MainForm {dataManagement} />

@@ -1,7 +1,7 @@
 <script>
     import axios from "axios";
     import { onMount } from "svelte";
-    import { writable, derived } from "svelte/store";
+    import { writable } from "svelte/store";
 
     import AddForm from "./AddForm.svelte";
     import ListFilter from "./ListFilter.svelte";
@@ -10,31 +10,18 @@
     import Dialog from "../UI/Dialog.svelte";
     import Alert from "../UI/Alert.svelte";
 
-    export let controller;
-    export let title;
-    export let placeholderCreate;
-
-    export let optionItemsTitle;
-    export let optionItems;
-    export let optionItemsTitle2;
-    export let optionItems2;
-    export let optionItemsTitle3;
-    export let optionItems3;
+    export let dataManagement;
 
     let dialog;
     let showdialogEdit = false;
     let showdialogDelete = false;
     let onLoad = false;
-    let itemIdDialog;
-    let itemNameDialog;
-    let itemOptionDialog;
-    let itemOptionDialog2;
-    let itemOptionDialog3;
+
+    let currentItem = null;
 
     const items = writable([]);
 
     onMount(() => {
-        console.log(dataManagement.options);
         onLoad = true;
         getItems();
     });
@@ -94,21 +81,18 @@
     // FILTER
 
     async function getItems() {
-        const response = await axios.get(`https://localhost/get${controller}s`);
-        items = response.data;
-        apiData.set(response.data);
+        const response = await axios.get(
+            `https://localhost/get${dataManagement.controller}s`,
+        );
+        items.set(response.data);
         onLoad = false;
-        console.log("item", items);
         return items;
     }
 
-    async function createItem(name, optionPost, optionPost2, optionPost3) {
+    async function createItem(formData) {
         await axios
-            .post(`https://localhost/create${controller}`, {
-                name,
-                optionPost,
-                optionPost2,
-                optionPost3,
+            .post(`https://localhost/create${dataManagement.controller}`, {
+                formData,
             })
             .then((res) => {
                 isSuccess = true;
@@ -123,14 +107,14 @@
             });
     }
 
-    async function editItem(id, name, optionPost, optionPost2, optionPost3) {
+    async function editItem(formData) {
         await axios
-            .post(`https://localhost/update${controller}/${id}`, {
-                name,
-                optionPost,
-                optionPost2,
-                optionPost3,
-            })
+            .post(
+                `https://localhost/update${dataManagement.controller}/${formData.id}`,
+                {
+                    formData
+                },
+            )
             .then((res) => {
                 isSuccess = true;
                 alertString = "Updated" + " " + res.data.name;
@@ -148,9 +132,12 @@
 
     async function deleteItem(id) {
         await axios
-            .post(`https://localhost/delete${controller}/${id}`, {
-                method: "DELETE",
-            })
+            .post(
+                `https://localhost/delete${dataManagement.controller}/${id}`,
+                {
+                    method: "DELETE",
+                },
+            )
             .then((res) => {
                 isSuccess = true;
                 alertString = res.data;
@@ -161,25 +148,15 @@
             });
     }
 
-    function editDialogItem(
-        itemId,
-        itemName,
-        itemOption,
-        itemOption2,
-        itemOption3,
-    ) {
+    function testEditDialogItem(item) {
         showdialogEdit = true;
-        itemIdDialog = itemId;
-        itemNameDialog = itemName;
-        itemOptionDialog = itemOption;
-        itemOptionDialog2 = itemOption2;
-        itemOptionDialog3 = itemOption3;
+        currentItem = item;
         dialog.showModal();
     }
 
-    function deleteDialogItem(itemId) {
+    function deleteDialogItem(item) {
         showdialogDelete = true;
-        itemIdDialog = itemId;
+        currentItem = item;
         dialog.showModal();
     }
 
@@ -204,34 +181,23 @@
     {/if}
 
     <div class="py-4">
-        <AddForm
-            addForm={createItem}
-            titleForm={title}
-            placeholder={placeholderCreate}
-            {optionItemsTitle}
-            {optionItems}
-            {optionItemsTitle2}
-            {optionItems2}
-            {optionItemsTitle3}
-            {optionItems3}
-        />
+        <AddForm addForm={createItem} {dataManagement} />
     </div>
 
-    <div class="py-4">
-        <ListFilter
-            {optionItemsTitle}
-            {optionItems}
-            {optionItemsTitle2}
-            {optionItems2}
-            {optionItemsTitle3}
-            {optionItems3}
-            bind:filterValue
-            bind:filterValue2
-            bind:filterValue3
-        />
-    </div>
+    {#if dataManagement.options.items != null || dataManagement.options.items3 != null || dataManagement.options.items3 != null}
+        <div class="py-4">
+            <ListFilter
+                dataOptions={dataManagement.options}
+                bind:filterValue
+                bind:filterValue2
+                bind:filterValue3
+            />
+        </div>
+    {/if}
 
-    <h2 class="text-3xl font-bold text-slate-950">Liste des {title}s</h2>
+    <h2 class="text-3xl font-bold text-slate-950">
+        Liste des {dataManagement.title}s
+    </h2>
 
     <ul>
         {#if onLoad}
@@ -281,20 +247,14 @@
                     <div class="flex items-center gap-1">
                         <button
                             on:click={() =>
-                                editDialogItem(
-                                    item.id,
-                                    item.name,
-                                    item?.wineregionId,
-                                    item?.grapevarietyCollection,
-                                    item?.subwineregionId,
-                                )}
+                                testEditDialogItem(item)}
                             class="bg-transparent hover:bg-teal-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent rounded"
                         >
                             Modifier
                         </button>
 
                         <button
-                            on:click={() => deleteDialogItem(item.id)}
+                            on:click={() => deleteDialogItem(item)}
                             class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
                         >
                             Supprimer
@@ -308,24 +268,15 @@
     <Dialog bind:dialog on:close={() => onClose()}>
         {#if showdialogEdit}
             <EditForm
-                editId={itemIdDialog}
-                name={itemNameDialog}
-                option={itemOptionDialog}
-                option2={itemOptionDialog2}
-                option3={itemOptionDialog3}
-                {optionItemsTitle}
-                {optionItems}
-                {optionItemsTitle2}
-                {optionItems2}
-                {optionItemsTitle3}
-                {optionItems3}
+                {currentItem}
+                dataOptions={dataManagement.options}
                 closeModal={() => dialog.close()}
                 {editItem}
             />
         {:else if showdialogDelete}
             <DeleteForm
-                {title}
-                editId={itemIdDialog}
+                title={dataManagement.title}
+                id={currentItem.id}
                 closeModal={() => dialog.close()}
                 {deleteItem}
             />

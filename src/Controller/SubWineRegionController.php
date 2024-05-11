@@ -66,9 +66,12 @@ class SubWineRegionController extends AbstractController
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator
     ) {
-        $wineregion = $WineRegionRepository->find($request->getPayload()->get('optionPost'));
+        $formData = $request->getPayload()->all('formData');
+
+        $wineregion = $WineRegionRepository->find($formData['value']);
+
         $subwineregion = new SubWineRegion();
-        $subwineregion->setName($request->getPayload()->get('name'));
+        $subwineregion->setName($formData['name']);
         $subwineregion->setWineregion($wineregion);
 
         $errors = $validator->validate($subwineregion);
@@ -101,10 +104,12 @@ class SubWineRegionController extends AbstractController
         int $id,
         ValidatorInterface $validator
     ) {
-        $wineregion = $WineRegionRepository->find($request->getPayload()->get('optionPost'));
+        $formData = $request->getPayload()->all('formData');
+
+        $wineregion = $WineRegionRepository->find($formData['optionValue']);
 
         $subwineregion = $entityManager->getRepository(SubWineRegion::class)->find($id);
-        $subwineregion->setName($request->getPayload()->get('name'));
+        $subwineregion->setName($formData['name']);
         $subwineregion->setWineregion($wineregion);
 
         $errors = $validator->validate($subwineregion);

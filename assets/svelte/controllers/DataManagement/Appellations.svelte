@@ -4,16 +4,19 @@
 
     import MainForm from "../CrudComponent/MainForm.svelte";
 
-    let controller = "appellation";
-    let title = "appellation";
-    let placeholderCreate = "Muscadet";
-    let optionItemsTitle = "Région viticole";
-    let optionItemsTitle2 = "Cépages";
-    let optionItemsTitle3 = "Sous-région viticole";
-
-    let optionItems = [];
-    let optionItems2 = [];
-    let optionItems3 = [];
+    let dataManagement = {
+        controller: "appellation",
+        title: "appellation",
+        placeholderCreate: "Muscadet",
+        options: {
+            itemsTitle: "Région viticole",
+            itemsTitle2: "Cépages",
+            itemsTitle3: "Sous-région viticole",
+            items: null,
+            items2: null,
+            items3: null,
+        },
+    };
 
     onMount(async () => {
         getWineregion();
@@ -23,27 +26,16 @@
 
     async function getWineregion() {
         const response = await axios.get(`https://localhost/getwineregions`);
-        optionItems = response.data;
+        dataManagement.options.items = response.data;
     }
     async function getGrapeVariety() {
         const response = await axios.get(`https://localhost/getgrapevarietys`);
-        optionItems2 = response.data;
+        dataManagement.options.items2 = response.data;
     }
     async function getSubwineregion() {
         const response = await axios.get(`https://localhost/getsubwineregions`);
-        optionItems3 = response.data;
+        dataManagement.options.items3 = response.data;
     }
-
 </script>
 
-<MainForm
-    {controller}
-    {title}
-    {placeholderCreate}
-    {optionItems}
-    {optionItemsTitle}
-    {optionItems2}
-    {optionItemsTitle2}
-    {optionItems3}
-    {optionItemsTitle3}
-/>
+<MainForm {dataManagement} />

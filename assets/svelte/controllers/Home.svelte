@@ -2,11 +2,14 @@
     import MapComponent from "./MapComponent/MapComponent.svelte";
     import MapInfo from "./MapComponent/MapInfo.svelte";
 
-    let usedSpot = null;
+    let appellationInfos = {
+        usedSpot: null,
+        usedAppellation: null,
+    }
 
 </script>
 
 <div class="flex justify-around">
-    <MapComponent bind:usedSpot></MapComponent>
-    <MapInfo {usedSpot}></MapInfo>
+    <MapComponent bind:appellationInfos></MapComponent>
+    <MapInfo {appellationInfos}></MapInfo>
 </div>

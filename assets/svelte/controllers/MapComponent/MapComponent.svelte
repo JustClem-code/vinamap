@@ -4,30 +4,34 @@
     import { fade } from "svelte/transition";
 
     export let appellationInfos;
+    export let dataMap;
+    export let currentMatrix;
 
-    let isVisible = false;
-
-    let isZoomable = false;
+    export let toggleRegion;
+    export let toggleAppellation;
+    export let zoomOnregion;
+    export let backZoom;
+    export let enLarge;
+    export let reduce;
 
     let filtered = true;
 
     let newSpots = spots;
 
-    let defaultMatrix = "matrix(.22807, 0, 0, .22807, 1974, 984.91)";
-
-    let currentMatrix = defaultMatrix;
-
     $: spotted = (spot, appellationTitle) => {
         if (spot == appellationInfos.usedSpot) {
-            if (isZoomable) {
-                return "grow";
+            if (dataMap.isZoomable) {
+                return appellationTitle ==
+                    appellationInfos.usedAppellation?.title
+                    ? "spotted_color"
+                    : "grow";
             } else {
                 return appellationTitle == "Muscadet"
                     ? "filtered_color"
                     : "spotted_color";
             }
         } else {
-            if (isZoomable) {
+            if (dataMap.isZoomable) {
                 return "grow_inactive";
             } else {
                 return appellationTitle == "Muscadet"
@@ -36,101 +40,52 @@
             }
         }
     };
-
-    function toggleRegion(spot) {
-        if (isZoomable) {
-            return;
+    /* $: spotted = (spot, appellationTitle) => {
+        if (spot == appellationInfos.usedSpot) {
+            if (dataMap.isZoomable) {
+                return "grow";
+            } else {
+                return appellationTitle == "Muscadet"
+                    ? "filtered_color"
+                    : "spotted_color";
+            }
+        } else {
+            if (dataMap.isZoomable) {
+                return "grow_inactive";
+            } else {
+                return appellationTitle == "Muscadet"
+                    ? "filtered_color"
+                    : "grow";
+            }
         }
-        appellationInfos.usedSpot = spot;
-    }
-
-    function toggleAppellation(spot, appellation) {
-        if (!isZoomable || isVisible || spot != appellationInfos.usedSpot) {
-            return;
-        }
-        appellationInfos.usedAppellation = appellation;
-    }
-
-    function zoomAnimation(matrix_begin, matrix_end) {
-        const newspaperSpinning = [
-            { transform: matrix_begin },
-            { transform: matrix_end },
-        ];
-
-        const newspaperTiming = {
-            duration: 200,
-            iterations: 1,
-        };
-
-        const newspaper = document.querySelector("#g1424");
-
-        newspaper.animate(newspaperSpinning, newspaperTiming);
-
-        currentMatrix = matrix_end;
-    }
-
-    function testFocus() {
-
-    }
-
-    function zoomOnregion() {
-        if (isZoomable) {
-            return;
-        }
-
-        zoomAnimation(currentMatrix, appellationInfos.usedSpot.transform_zoom);
-
-        isZoomable = true;
-    }
-
-    function backZoom() {
-        zoomAnimation(currentMatrix, defaultMatrix);
-        isZoomable = false;
-    }
-
-    function enLarge(spot) {
-        if (!isZoomable || spot != appellationInfos.usedSpot) {
-            return;
-        }
-        isVisible = true;
-    }
-
-    function reduce() {
-        isVisible = false;
-    }
+    }; */
 </script>
 
-<div class="w-6/12 m-4 relative" in:fade>
-    <button
-        on:click={() => testFocus()}
-        class="absolute top-4 right-4 flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 border-4 text-white py-1 px-2 rounded"
-        >TEST</button
-    >
-    {#if isZoomable && !isVisible}
+<div
+    class="md:w-6/12 aspect-square m-4 relative rounded shadow-lg h-max overflow-hidden"
+    in:fade
+>
+    {#if dataMap.isZoomable && !dataMap.isVisible}
         <button
             on:click={() => backZoom()}
-            class="absolute top-4 left-4 flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 border-4 text-white py-1 px-2 rounded"
+            class="absolute top-4 right-4 flex-shrink-0 bg-teal-900 text-teal-300 border-teal-300 hover:bg-teal-300 hover:text-teal-900 hover:border-teal-900 border-4 py-1 px-2 rounded"
             >Retour</button
         >
     {/if}
     <svg
         width="100%"
-        height="100%"
         version="1.1"
         viewBox="0 0 2e3 2e3"
         xmlns="http://www.w3.org/2000/svg"
     >
-        <rect
+        <!--  <rect
             id="rect1524"
             x=".42568"
             y=".4257"
             width="1999.1"
             height="1999.1"
             fill="#fff"
-            fill-opacity=".70886"
-            stroke="#000"
-            stroke-width=".85138"
-        />
+        /> -->
         <g id="g1424" transform={currentMatrix}>
             <g
                 id="g9344"
@@ -212,7 +167,7 @@
                 {/each}
             </g>
         </g>
-        {#if appellationInfos.usedAppellation && isZoomable && isVisible}
+        {#if appellationInfos.usedAppellation && dataMap.isZoomable && dataMap.isVisible}
             <rect
                 on:click={() => {
                     reduce();
@@ -258,7 +213,7 @@
 
     .grow {
         fill: #115e59;
-        stroke: #14b8a6;
+        stroke: #5eead4;
         stroke-width: 2px;
         transform: scale(1);
         transform-origin: 50% 50%;
@@ -267,8 +222,8 @@
     }
 
     .grow:hover {
-        fill: #14b8a6 !important;
-        stroke: #042f2e;
+        /* fill: #5eead4 !important; */
+        /* stroke: #042f2e; */
     }
 
     .grow:focus {
@@ -277,8 +232,8 @@
 
     .grow_inactive {
         fill: #0f766e;
-        stroke: #0f766e;
-        stroke-width: 2px;
+        /* stroke: #0f766e;
+        stroke-width: 2px; */
         transform: scale(1);
         transform-origin: 50% 50%;
         transition: 0.3s;
@@ -297,9 +252,9 @@
     }
 
     .spotted_color {
-        fill: #14b8a6 !important;
-        stroke: #042f2e;
-        stroke-width: 1px;
+        fill: #5eead4 !important;
+        /* stroke: #042f2e;
+        stroke-width: 1px; */
         transform: scale(1);
         transform-origin: 50% 50%;
         transition: 0.6s;
@@ -308,9 +263,9 @@
 
     .enlarge_color {
         z-index: 10000;
-        fill: #14b8a6 !important;
+        fill: #5eead4 !important;
         stroke: #042f2e;
-        stroke-width: 1px;
+        stroke-width: 2px;
         transform: scale(2);
         transform-origin: 50% 50%;
         transition: 0.6s;

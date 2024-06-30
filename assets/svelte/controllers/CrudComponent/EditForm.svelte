@@ -26,7 +26,7 @@
     let optionItem3Filter = [];
     $: if (dataOptions.items3 != null) {
         optionItem3Filter = dataOptions.items3.filter(
-            (item) => item.wineregionId === optionValue
+            (item) => item.wineregionId === optionValue,
         );
     }
 
@@ -47,8 +47,8 @@
             name: currentItem.name,
             optionValue,
             optionValue2,
-            optionValue3
-        }
+            optionValue3,
+        };
         console.log("edit", formData);
         editItem(formData);
     }
@@ -127,7 +127,8 @@
                                                 id="grid-state"
                                             >
                                                 {#each dataOptions.items as optionItem}
-                                                    <option value={optionItem.id}
+                                                    <option
+                                                        value={optionItem.id}
                                                         >{optionItem.name}</option
                                                     >
                                                 {/each}
@@ -196,6 +197,7 @@
                                         </label>
                                         <div class="relative">
                                             <MultiSelect
+                                                --sms-options-max-height="30vh"
                                                 bind:value={optionValue2}
                                                 options={multiselectOptions}
                                                 selected={selectedOptions}

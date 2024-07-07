@@ -3,8 +3,6 @@
 
     export let dataOptions;
 
-    $: console.log("dataOptions", dataOptions);
-
     export let filterValue;
     export let filterValue2;
     export let filterValue3;

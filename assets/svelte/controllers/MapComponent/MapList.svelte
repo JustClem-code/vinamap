@@ -4,6 +4,7 @@
     export let appellationInfos;
     export let dataMap;
     export let filterItems;
+    export let filterApArray;
 
     export let compareName;
     export let toggleRegion;
@@ -14,21 +15,24 @@
     export let enLarge;
 
     $: spotted = (item) => {
+        let isFilterAp = filterApArray?.find(
+            (f) => f.name == item.name || f.wineregionName == item.name,
+        );
+
         if (
-            appellationInfos.usedSpot?.title.localeCompare(
+            compareName(appellationInfos.usedSpot?.title ?? "yo", item.name) ||
+            compareName(
+                appellationInfos.usedAppellation?.title ?? "yo",
                 item.name,
-                undefined,
-                { sensitivity: "accent" },
-            ) === 0 ||
-            appellationInfos.usedAppellation?.title.localeCompare(
-                item.name,
-                undefined,
-                { sensitivity: "accent" },
-            ) === 0
+            )
         ) {
-            return "bg-teal-300 text-teal-900";
+            return isFilterAp
+                ? "bg-red-300 text-red-900"
+                : "bg-teal-300 text-teal-900";
         } else {
-            return "bg-gray-200 text-gray-700";
+            return isFilterAp
+                ? "bg-red-200 text-red-700"
+                : "bg-gray-200 text-gray-700";
         }
     };
 

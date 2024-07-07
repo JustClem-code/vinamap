@@ -6,7 +6,9 @@
     export let appellationInfos;
     export let dataMap;
     export let currentMatrix;
+    export let filterApArray;
 
+    export let compareName;
     export let toggleRegion;
     export let toggleAppellation;
     export let zoomOnregion;
@@ -14,51 +16,39 @@
     export let enLarge;
     export let reduce;
 
-    let filtered = true;
-
     let newSpots = spots;
 
+    $: isFiteredEnlarge = filterApArray?.some((item) => compareName(item.name, appellationInfos.usedAppellation?.title))
+
     $: spotted = (spot, appellationTitle) => {
+
+        let isFilterAp = filterApArray?.some((item) =>
+            compareName(appellationTitle, item.name)
+        );
+
+        let isUsedAp =
+            appellationTitle == appellationInfos.usedAppellation?.title;
+
+        // REGION
         if (spot == appellationInfos.usedSpot) {
+            //ZOOM sur la region
             if (dataMap.isZoomable) {
-                return appellationTitle ==
-                    appellationInfos.usedAppellation?.title
-                    ? "spotted_color"
-                    : "grow";
+                if (isFilterAp) {
+                    return isUsedAp ? "spotted_filtered_color" : "filtered_color";
+                } else {
+                    return isUsedAp ? "spotted_color" : "grow";
+                }
             } else {
-                return appellationTitle == "Muscadet"
-                    ? "filtered_color"
-                    : "spotted_color";
+                return isFilterAp ? "spotted_filtered_color" : "spotted_color";
             }
         } else {
             if (dataMap.isZoomable) {
                 return "grow_inactive";
             } else {
-                return appellationTitle == "Muscadet"
-                    ? "filtered_color"
-                    : "grow";
+                return isFilterAp ? "filtered_color" : "grow";
             }
         }
     };
-    /* $: spotted = (spot, appellationTitle) => {
-        if (spot == appellationInfos.usedSpot) {
-            if (dataMap.isZoomable) {
-                return "grow";
-            } else {
-                return appellationTitle == "Muscadet"
-                    ? "filtered_color"
-                    : "spotted_color";
-            }
-        } else {
-            if (dataMap.isZoomable) {
-                return "grow_inactive";
-            } else {
-                return appellationTitle == "Muscadet"
-                    ? "filtered_color"
-                    : "grow";
-            }
-        }
-    }; */
 </script>
 
 <div
@@ -197,7 +187,7 @@
                             id={appellationInfos.usedAppellation.id}
                             title={appellationInfos.usedAppellation.title}
                             d={appellationInfos.usedAppellation.d}
-                            class="enlarge_color"
+                            class={isFiteredEnlarge ? 'enlarge_filtered_color' : 'enlarge_color'}
                         ></path>
                     </g>
                 </g>
@@ -207,10 +197,6 @@
 </div>
 
 <style>
-    .region_area {
-        padding: 100px;
-    }
-
     .grow {
         fill: #115e59;
         stroke: #5eead4;
@@ -219,11 +205,6 @@
         transform-origin: 50% 50%;
         transition: 0.3s;
         transform-box: fill-box;
-    }
-
-    .grow:hover {
-        /* fill: #5eead4 !important; */
-        /* stroke: #042f2e; */
     }
 
     .grow:focus {
@@ -242,8 +223,17 @@
     }
 
     .filtered_color {
-        fill: #facc15;
-        stroke: #ca8a04;
+        fill: #991b1b;
+        stroke: #fca5a5;
+        stroke-width: 2px;
+        transform: scale(1);
+        transform-origin: 50% 50%;
+        transition: 0.3s;
+        transform-box: fill-box;
+    }
+    .spotted_filtered_color {
+        fill: #fca5a5;
+        stroke: #991b1b;
         stroke-width: 2px;
         transform: scale(1);
         transform-origin: 50% 50%;
@@ -262,9 +252,18 @@
     }
 
     .enlarge_color {
-        z-index: 10000;
         fill: #5eead4 !important;
         stroke: #042f2e;
+        stroke-width: 2px;
+        transform: scale(2);
+        transform-origin: 50% 50%;
+        transition: 0.6s;
+        transform-box: fill-box;
+    }
+
+    .enlarge_filtered_color {
+        fill: #fca5a5 !important;
+        stroke: #991b1b;
         stroke-width: 2px;
         transform: scale(2);
         transform-origin: 50% 50%;

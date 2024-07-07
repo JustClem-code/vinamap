@@ -5,6 +5,8 @@
     import MapComponent from "./MapComponent/MapComponent.svelte";
     import MapList from "./MapComponent/MapList.svelte";
     import MapInfo from "./MapComponent/MapInfo.svelte";
+    import MapFilter from "./MapComponent/MapFilter.svelte";
+    import MapSearch from "./MapComponent/MapSearch.svelte";
 
     let appellationInfos = {
         usedSpot: null,
@@ -15,6 +17,7 @@
         onLoad: true,
         isZoomable: false,
         isVisible: false,
+        isSearchable: false,
         defaultMatrix: "matrix(.22807, 0, 0, .22807, 1974, 984.91)",
     };
 
@@ -27,6 +30,26 @@
         subwineregion: null,
     };
 
+    let filterValue = [];
+
+    let filterApArray = [];
+
+    function grapeFilter(ar) {
+        filterApArray = ar.filter(({ grapevarietyCollection }) => {
+            return grapevarietyCollection.some(({ grapevarietyId }) => {
+                return filterValue.some((f) => {
+                    return f.value === grapevarietyId;
+                });
+            });
+        });
+    }
+
+    $: if (filterValue.length) {
+        grapeFilter(dataManagement.appellations);
+    } else {
+        filterApArray = [];
+    }
+
     let filterItems = null;
 
     onMount(async () => {
@@ -38,8 +61,6 @@
         ]);
         dataMap.onLoad = false;
     });
-
-    $: console.log("debug", appellationInfos.usedAppellation);
 
     $: if (dataMap.isZoomable) {
         filterItems = dataManagement.appellations
@@ -72,6 +93,8 @@
         dataManagement.subwineregion = response.data;
     }
 
+    // METHODS
+
     function compareName(title, name) {
         return (
             title.localeCompare(name, undefined, {
@@ -88,6 +111,7 @@
     }
 
     function toggleAppellation(spot, appellation) {
+
         if (
             !dataMap.isZoomable ||
             dataMap.isVisible ||
@@ -98,9 +122,9 @@
 
         let mergedAp;
 
-        dataManagement.appellations.find(element => {
+        dataManagement.appellations.find((element) => {
             if (compareName(appellation?.title, element.name)) {
-                mergedAp = {...element, ...appellation};
+                mergedAp = { ...element, ...appellation };
             }
         });
 
@@ -136,6 +160,9 @@
     }
 
     function backZoom() {
+        if (!dataMap.isZoomable) {
+            return;
+        }
         zoomAnimation(currentMatrix, dataMap.defaultMatrix);
 
         dataMap.isZoomable = false;
@@ -149,7 +176,11 @@
     }
 
     function reduce() {
+        if (!dataMap.isVisible) {
+            return;
+        }
         dataMap.isVisible = false;
+        dataMap.isSearchable = false;
     }
 </script>
 
@@ -158,6 +189,8 @@
         bind:appellationInfos
         bind:dataMap
         bind:currentMatrix
+        bind:filterApArray
+        {compareName}
         {toggleRegion}
         {toggleAppellation}
         {zoomOnregion}
@@ -166,6 +199,19 @@
         {reduce}
     ></MapComponent>
     <div class="w-full md:w-6/12">
+        <MapSearch
+            bind:appellationInfos
+            bind:dataMap
+            {dataManagement}
+            {compareName}
+            {toggleRegion}
+            {toggleAppellation}
+            {zoomOnregion}
+            {backZoom}
+            {enLarge}
+            {reduce}
+        ></MapSearch>
+        <MapFilter {dataManagement} bind:filterValue></MapFilter>
         {#if dataMap.isVisible}
             <MapInfo {appellationInfos} {reduce}></MapInfo>
         {:else}
@@ -173,6 +219,7 @@
                 bind:appellationInfos
                 bind:dataMap
                 bind:filterItems
+                bind:filterApArray
                 {compareName}
                 {toggleRegion}
                 {toggleAppellation}

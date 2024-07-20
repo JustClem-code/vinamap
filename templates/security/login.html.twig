@@ -3,29 +3,81 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<form method="post">
+<form method="post" class="flex flex-wrap justify-center content-center p-10" style="min-height: 50vh;">
+<div class="w-full max-w-lg">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
     {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
+    <h1 class="text-xl font-bold text-slate-950 mb-2">You are logged in as {{ app.user.userIdentifier }}</h1>
+    <div>
+        <a href="{{ path('app_logout') }}"
+            class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 border-4 text-white py-1 px-2 rounded"
+            type="button"
+        >
+            Logout
+        </a>
+    </div>
+    {% else %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    <h1 class="text-3xl font-bold text-slate-950 mb-2">Please sign in</h1>
+
+    <div class="flex flex-wrap mb-6">
+        <div class="w-full">
+            <label
+                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                for="inputEmail"
+            >
+                Email
+            </label>
+            <input
+                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                type="email"
+                value="{{ last_username }}"
+                name="email"
+                id="inputEmail"
+                class="form-control"
+                autocomplete="email"
+                required autofocus>
+        </div>
+    </div>
+    <div class="flex flex-wrap mb-6">
+        <div class="w-full">
+            <label
+                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                for="inputPassword"
+            >
+                Password
+            </label>
+            <input
+                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                type="password"
+                name="password"
+                id="inputPassword"
+                class="form-control"
+                autocomplete="current-password"
+                required>
+        </div>
+    </div>
 
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
     >
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
+    <div>
+        <button
+            class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 border-4 text-white py-1 px-2 rounded"
+            type="submit"
+        >
+            Sign in
+        </button>
+    </div>
+
+    {% endif %}
+
+</div>
 </form>
+
+
 {% endblock %}

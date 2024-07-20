@@ -49,9 +49,15 @@
             </a>
             <a
                 href="/appellations"
-                class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
+                class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
             >
                 Appellations
+            </a>
+            <a
+                href="/login"
+                class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
+            >
+                Login/Logout
             </a>
         </div>
         <div>

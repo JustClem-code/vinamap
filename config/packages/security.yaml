@@ -20,7 +20,7 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                # target: app_any_route
+                target: app_home
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -39,6 +39,10 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
          - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/wineregions, roles: ROLE_USER }
+         - { path: ^/subwineregions, roles: ROLE_USER }
+         - { path: ^/grapevarietys, roles: ROLE_USER }
+         - { path: ^/appellations, roles: ROLE_USER }
 
 when@test:
     security:

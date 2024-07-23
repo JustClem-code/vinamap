@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -32,6 +34,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\OneToMany(mappedBy: 'user_email', targetEntity: Product::class)]
+    private Collection $user_email;
+
+    public function __construct()
+    {
+        $this->user_email = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -114,4 +124,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getUserEmail(): Collection
+    {
+        return $this->user_email;
+    }
+
+    public function addUserEmail(Product $userEmail): static
+    {
+        if (!$this->user_email->contains($userEmail)) {
+            $this->user_email->add($userEmail);
+            $userEmail->setUserEmail($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserEmail(Product $userEmail): static
+    {
+        if ($this->user_email->removeElement($userEmail)) {
+            // set the owning side to null (unless already changed)
+            if ($userEmail->getUserEmail() === $this) {
+                $userEmail->setUserEmail(null);
+            }
+        }
+
+        return $this;
+    }
 }
+
+//TODO: user_product plutôt que user_email

@@ -19,9 +19,11 @@
     };
 
     onMount(async () => {
-        getWineregion();
-        getGrapeVariety();
-        getSubwineregion();
+        await Promise.all([
+            getWineregion(),
+            getGrapeVariety(),
+            getSubwineregion(),
+        ]);
     });
 
     async function getWineregion() {

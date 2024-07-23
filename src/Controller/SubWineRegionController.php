@@ -20,6 +20,11 @@ class SubWineRegionController extends AbstractController
 {
     use ApiTrait;
 
+    #[Route('/subwineregions', name: 'subwineregions_list')]
+    public function showAll(): Response
+    {
+        return $this->render('/vinamap/subwineregionslist.html.twig');
+    }
 
     #[Route('/subwineregion/{id}', name: 'subwineregion_show')]
     public function show(EntityManagerInterface $entityManager, int $id): Response
@@ -34,12 +39,6 @@ class SubWineRegionController extends AbstractController
         }
 
         return new Response('Check out this great wine region again: ' . $subwineregion->getName());
-    }
-
-    #[Route('/subwineregions', name: 'subwineregions_list')]
-    public function showAll(): Response
-    {
-        return $this->render('/vinamap/subwineregionslist.html.twig');
     }
 
     /**

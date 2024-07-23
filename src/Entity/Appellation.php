@@ -34,9 +34,13 @@ class Appellation
     #[ORM\ManyToOne(inversedBy: 'appellations')]
     private ?SubWineRegion $subwineregion = null;
 
+    #[ORM\OneToMany(mappedBy: 'Appellation', targetEntity: Product::class)]
+    private Collection $products;
+
     public function __construct()
     {
         $this->grapevariety = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +104,36 @@ class Appellation
     public function setSubwineregion(?SubWineRegion $subwineregion): static
     {
         $this->subwineregion = $subwineregion;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setAppellation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getAppellation() === $this) {
+                $product->setAppellation(null);
+            }
+        }
 
         return $this;
     }

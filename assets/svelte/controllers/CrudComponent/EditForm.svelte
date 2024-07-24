@@ -10,9 +10,12 @@
     onMount(() => {
         const element1 = document.getElementById("first-input-edit");
         element1.focus();
+
+        console.log("currentItem", currentItem);
+        console.log("dataOptions", dataOptions);
     });
 
-    $: option = currentItem?.wineregionId;
+    $: option = currentItem?.wineregionId || currentItem?.appellationId;
     $: option3 = currentItem?.subwineregionId;
 
     $: optionValue = option;
@@ -45,6 +48,9 @@
         let formData = {
             id: currentItem.id,
             name: currentItem.name,
+            manufacturer: currentItem?.manufacturer,
+            vintage: currentItem?.vintage,
+            review: currentItem?.review,
             optionValue,
             optionValue2,
             optionValue3,
@@ -110,6 +116,103 @@
                                     />
                                 </div>
                             </div>
+
+                            {#if dataOptions.itemsTitle4}
+                                <div class="flex flex-wrap mb-6">
+                                    <div class="w-full">
+                                        <label
+                                            class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                            for="grid-password"
+                                        >
+                                            {dataOptions.itemsTitle4}
+                                        </label>
+                                        <input
+                                            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            bind:value={currentItem.manufacturer}
+                                            id="first-input-edit"
+                                            type="text"
+                                            placeholder={currentItem.manufacturer}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            {/if}
+
+                            {#if dataOptions.itemsTitle5}
+                                <div class="flex flex-wrap mb-6">
+                                    <div class="w-full">
+                                        <label
+                                            class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                            for="grid-password"
+                                        >
+                                            {dataOptions.itemsTitle5}
+                                        </label>
+                                        <input
+                                            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            bind:value={currentItem.vintage}
+                                            id="first-input-edit"
+                                            type="number"
+                                            placeholder={currentItem.vintage}
+                                        />
+                                    </div>
+                                </div>
+                            {/if}
+
+                            {#if dataOptions.itemsTitle6}<div class="flex flex-wrap mb-6">
+                                    <div class="w-full">
+                                        <label
+                                            class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                            for="grid-password"
+                                        >
+                                            {dataOptions.itemsTitle6}
+                                        </label>
+                                        <textarea
+                                            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            bind:value={currentItem.review}
+                                        ></textarea>
+                                    </div>
+                                </div>
+                            {/if}
+
+                            <!-- {#if dataManagement?.options.itemsTitle5}
+                                <div class="flex flex-wrap mb-6">
+                                    <div class="w-full">
+                                        <label
+                                            class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                            for="grid-password"
+                                        >
+                                            {dataManagement?.options
+                                                .itemsTitle5}
+                                        </label>
+                                        <input
+                                            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            bind:value={formData.vintage}
+                                            type="number"
+                                            placeholder={dataManagement.options
+                                                .itemsTitle5}
+                                            aria-label={dataManagement.options
+                                                .itemsTitle5}
+                                        />
+                                    </div>
+                                </div>
+                            {/if}
+                            {#if dataManagement?.options.itemsTitle6}
+                                <div class="flex flex-wrap mb-6">
+                                    <div class="w-full">
+                                        <label
+                                            class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                            for="grid-password"
+                                        >
+                                            {dataManagement?.options
+                                                .itemsTitle6}
+                                        </label>
+                                        <textarea
+                                            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            bind:value={formData.review}
+                                        ></textarea>
+                                    </div>
+                                </div>
+                            {/if} -->
 
                             {#if dataOptions.items != null}
                                 <div class="flex flex-wrap mb-6">

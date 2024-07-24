@@ -29,6 +29,9 @@ class ProductRepository extends ServiceEntityRepository
             'name' => (string) $product->getName(),
             'appellationId' => (int) $product->getappellation()?->getId(),
             'appellationName' => (string) $product->getappellation()?->getName(),
+            'manufacturer' => (string) $product->getManufacturer(),
+            'vintage' => (int) $product->getVintage(),
+            'review' => (string) $product->getReview(),
         ];
     }
 

@@ -6,8 +6,6 @@
 
     export let dataManagement;
 
-    $: console.log('dataManagement', dataManagement);
-
     $: options = dataManagement?.options;
 
     let formData = {
@@ -86,6 +84,7 @@
                 type="text"
                 placeholder={dataManagement.options.itemsTitle4}
                 aria-label={dataManagement.options.itemsTitle4}
+                required
             />
         </div>
     </div>

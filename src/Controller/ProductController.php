@@ -25,7 +25,7 @@ class ProductController extends AbstractController
 
     public function __construct(
         private Security $security,
-    ){
+    ) {
     }
 
     #[Route('/product', name: 'app_product')]
@@ -34,7 +34,7 @@ class ProductController extends AbstractController
         return $this->render('vinamap/productslist.html.twig');
     }
 
-     /**
+    /**
      * @Route("/getproducts", methods="GET")
      */
     #[Route('/getproducts', name: 'get_products_list', methods: ['GET'])]
@@ -91,8 +91,44 @@ class ProductController extends AbstractController
         return $this->respondCreated($ProductRepository->transform($product));
     }
 
-    // TODO:  afficher l'appellation dans row du listing
-    // Éditer et supprimer le product
+    /**
+     * @Route("/updateproduct/{id}", methods="POST")
+     */
+    #[Route('/updateproduct/{id}', name: 'update_product', methods: ['POST'])]
+    public function updateProduct(
+        Request $request,
+        ProductRepository $ProductRepository,
+        AppellationRepository $AppellationRepository,
+        EntityManagerInterface $entityManager,
+        int $id,
+        ValidatorInterface $validator
+    ) {
+        $formData = $request->getPayload()->all('formData');
 
+        $appellation = $AppellationRepository->find($formData['optionValue']);
+
+        $product = $entityManager->getRepository(Product::class)->find($id);
+        $product->setName($formData['name']);
+        $product->setVintage($formData['vintage']);
+        $product->setManufacturer($formData['manufacturer']);
+        $product->setReview($formData['review']);
+        $product->setAppellation($appellation);
+
+        $errors = $validator->validate($product);
+        if (count($errors) > 0) {
+            foreach ($errors as $violation) {
+                $message = $violation->getMessage();
+            }
+            return $this->respondValidationError((string) $message);
+        }
+
+        $entityManager->flush();
+
+        return $this->respondCreated($ProductRepository->transform($product));
+    }
+
+    // TODO:  afficher l'appellation dans row du listing
+    // supprimer le product
+    // mettre un multiselect pour add et edit
 
 }

@@ -6,6 +6,8 @@
 
     export let dataManagement;
 
+    $: console.log('dataManagement', dataManagement);
+
     $: options = dataManagement?.options;
 
     let formData = {
@@ -13,6 +15,9 @@
         value: 0,
         value2: [],
         value3: 0,
+        manufacturer: "",
+        vintage: null,
+        review: null,
     };
 
     onMount(async () => {
@@ -65,6 +70,61 @@
             />
         </div>
     </div>
+
+    {#if dataManagement?.options.itemsTitle4}
+    <div class="flex flex-wrap mb-6">
+        <div class="w-full">
+            <label
+                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                for="grid-password"
+            >
+              {dataManagement?.options.itemsTitle4}
+            </label>
+            <input
+                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                bind:value={formData.manufacturer}
+                type="text"
+                placeholder={dataManagement.options.itemsTitle4}
+                aria-label={dataManagement.options.itemsTitle4}
+            />
+        </div>
+    </div>
+    {/if}
+    {#if dataManagement?.options.itemsTitle5}
+    <div class="flex flex-wrap mb-6">
+        <div class="w-full">
+            <label
+                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                for="grid-password"
+            >
+              {dataManagement?.options.itemsTitle5}
+            </label>
+            <input
+                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                bind:value={formData.vintage}
+                type="number"
+                placeholder={dataManagement.options.itemsTitle5}
+                aria-label={dataManagement.options.itemsTitle5}
+            />
+        </div>
+    </div>
+    {/if}
+    {#if dataManagement?.options.itemsTitle6}
+    <div class="flex flex-wrap mb-6">
+        <div class="w-full">
+            <label
+                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                for="grid-password"
+            >
+              {dataManagement?.options.itemsTitle6}
+            </label>
+            <textarea
+                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                bind:value={formData.review}
+            ></textarea>
+        </div>
+    </div>
+    {/if}
 
     {#if options.items != null}
         <div class="flex flex-wrap mb-6">

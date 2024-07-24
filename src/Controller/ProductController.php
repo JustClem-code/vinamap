@@ -65,10 +65,12 @@ class ProductController extends AbstractController
 
         $product = new Product();
         $product->setName($formData['name']);
+        $product->setVintage($formData['vintage']);
+        $product->setManufacturer($formData['manufacturer']);
+        $product->setReview($formData['review']);
         $product->setAppellation($appellation);
         $product->setUserEmail($user);
 
-        $product->setManufacturer('test manufacturer');
 
 
         $errors = $validator->validate($product);
@@ -89,7 +91,7 @@ class ProductController extends AbstractController
         return $this->respondCreated($ProductRepository->transform($product));
     }
 
-    // TODO: Il reste a mettre le manufacturer/la review dans le formulaire ; afficher l'appellation dans row du listing
+    // TODO:  afficher l'appellation dans row du listing
     // Éditer et supprimer le product
 
 

@@ -127,8 +127,20 @@ class ProductController extends AbstractController
         return $this->respondCreated($ProductRepository->transform($product));
     }
 
-    // TODO:  afficher l'appellation dans row du listing
-    // supprimer le product
-    // mettre un multiselect pour add et edit
+    /**
+     * @Route("/deleteproduct/{id}", methods="POST")
+     */
+    #[Route('/deleteproduct/{id}', name: 'delete_product', methods: ['POST'])]
+    public function deleteProduct(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $product = $entityManager->getRepository(Product::class)->find($id);
+        
+        $entityManager->remove($product);
+        $entityManager->flush();
+
+        return new Response('Delete product with name ' . $product->getName());
+    }
+
+    // TODO: mettre un multiselect pour add et edit
 
 }

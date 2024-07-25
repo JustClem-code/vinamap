@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
+
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -16,8 +19,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private Security $security,
+    ) {
         parent::__construct($registry, Product::class);
     }
 
@@ -32,12 +37,25 @@ class ProductRepository extends ServiceEntityRepository
             'manufacturer' => (string) $product->getManufacturer(),
             'vintage' => (int) $product->getVintage(),
             'review' => (string) $product->getReview(),
+            'userEmail' => $product->getUserEmail()->getId(),
         ];
+    }
+
+    public function getUserId(User $user) 
+    {
+        return (int) $user->getId();
     }
 
     public function transformAll()
     {
-        $products = $this->findAll();
+        $user = $this->security->getUser();
+
+        $userId = $this->getUserId($user);
+
+        $products = $this->findBy(
+            ['user_email' => $userId]
+        );
+        
         $productCollection = [];
 
         foreach ($products as $product) {

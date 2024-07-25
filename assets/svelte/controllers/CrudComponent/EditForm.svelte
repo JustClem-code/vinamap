@@ -10,9 +10,6 @@
     onMount(() => {
         const element1 = document.getElementById("first-input-edit");
         element1.focus();
-
-        console.log("currentItem", currentItem);
-        console.log("dataOptions", dataOptions);
     });
 
     $: option = currentItem?.wineregionId || currentItem?.appellationId;

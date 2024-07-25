@@ -1,8 +1,12 @@
 <script>
+    import { onMount } from "svelte";
     import img from "./../../../images/map-france.png";
 
     export let is_granted;
 
+    onMount(() => {
+        console.log("isgrantes", is_granted);
+    });
 </script>
 
 <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-6">
@@ -33,6 +37,12 @@
                 Home
             </a>
             {#if is_granted}
+                <a
+                    href="/product"
+                    class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
+                >
+                    Produits
+                </a>
                 <a
                     href="/wineregions"
                     class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"

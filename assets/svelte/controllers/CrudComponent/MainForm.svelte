@@ -163,7 +163,7 @@
     function resetAlert() {
         setTimeout(() => {
             alertString = "";
-        }, 3000);
+        }, 1000);
     }
 
     function onClose() {
@@ -225,23 +225,43 @@
                         {item.name}
                     </div>
 
-                    {#if item.wineregionId != null}
+                    {#if item.wineregionId}
                         <div class="pl-4">
                             {item.wineregionName}
                         </div>
                     {/if}
-                    {#if item.subwineregionId != null}
+                    {#if item.subwineregionId}
                         <div class="pl-4">
                             {item.subwineregionName}
                         </div>
                     {/if}
-                    {#if item.grapevarietyCollection != null}
+                    {#if item.grapevarietyCollection}
                         <div class="flex pl-4 gap-1">
                             {#each item.grapevarietyCollection as grape, i}
                                 <div>
                                     {grape.grapevarietyName}
                                 </div>
                             {/each}
+                        </div>
+                    {/if}
+                    {#if item.manufacturer}
+                        <div class="pl-4">
+                            {item.manufacturer}
+                        </div>
+                    {/if}
+                    {#if item.vintage && item.vintage != 0}
+                        <div class="pl-4">
+                            {item.vintage}
+                        </div>
+                    {/if}
+                    {#if item.appellationName}
+                        <div class="pl-4">
+                            {item.appellationName}
+                        </div>
+                    {/if}
+                    {#if item.review && item.review != ""}
+                        <div class="pl-4 text-teal-500">
+                             Is reviewed
                         </div>
                     {/if}
                     <div class="flex items-center gap-1">

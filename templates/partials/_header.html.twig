@@ -1,1 +1,1 @@
-<div {{ svelte_component('partials/Header', { 'user': app.user.email ?? null, 'is_granted': is_granted('IS_AUTHENTICATED_FULLY')}) }}></div>
+<div {{ svelte_component('partials/Header', { 'user': app.user.email ?? null, 'is_user': app.user ?? null}) }}></div>

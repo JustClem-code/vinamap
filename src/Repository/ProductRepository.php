@@ -37,11 +37,10 @@ class ProductRepository extends ServiceEntityRepository
             'manufacturer' => (string) $product->getManufacturer(),
             'vintage' => (int) $product->getVintage(),
             'review' => (string) $product->getReview(),
-            'userEmail' => $product->getUserEmail()->getId(),
         ];
     }
 
-    public function getUserId(User $user) 
+    public function getUserId(User $user)
     {
         return (int) $user->getId();
     }
@@ -55,7 +54,7 @@ class ProductRepository extends ServiceEntityRepository
         $products = $this->findBy(
             ['user_email' => $userId]
         );
-        
+
         $productCollection = [];
 
         foreach ($products as $product) {

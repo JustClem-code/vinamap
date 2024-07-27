@@ -7,6 +7,7 @@
     export let dataMap;
     export let currentMatrix;
     export let filterApArray;
+    export let dataManagement;
 
     export let compareName;
     export let toggleRegion;
@@ -18,12 +19,17 @@
 
     let newSpots = spots;
 
-    $: isFiteredEnlarge = filterApArray?.some((item) => compareName(item.name, appellationInfos.usedAppellation?.title))
+    $: isFiteredEnlarge = filterApArray?.some((item) =>
+        compareName(item.name, appellationInfos.usedAppellation?.title),
+    );
 
     $: spotted = (spot, appellationTitle) => {
-
         let isFilterAp = filterApArray?.some((item) =>
-            compareName(appellationTitle, item.name)
+            compareName(appellationTitle, item.name),
+        );
+
+        let isProduct = dataManagement.product?.find((item) =>
+            compareName(appellationTitle, item.appellationName),
         );
 
         let isUsedAp =
@@ -34,18 +40,36 @@
             //ZOOM sur la region
             if (dataMap.isZoomable) {
                 if (isFilterAp) {
-                    return isUsedAp ? "spotted_filtered_color" : "filtered_color";
+                    if (isUsedAp) {
+                        return isProduct ? "product_spotted_filtered_color" : "spotted_filtered_color";
+                    } else {
+                        return isProduct ? "product_filtered_color" : "filtered_color";
+                    }
                 } else {
-                    return isUsedAp ? "spotted_color" : "grow";
+                    if (isUsedAp) {
+                        return isProduct ? "product_spotted_color" : "spotted_color";
+                    } else {
+                        return isProduct ? "product_grow" : "grow";
+                    }
                 }
             } else {
-                return isFilterAp ? "spotted_filtered_color" : "spotted_color";
+                if (isFilterAp) {
+                    return isProduct ? "product_spotted_filtered_color" : "spotted_filtered_color";
+                } else {
+                    return isProduct ? "product_grow" : "spotted_color";
+                }
             }
         } else {
             if (dataMap.isZoomable) {
                 return "grow_inactive";
             } else {
-                return isFilterAp ? "filtered_color" : "grow";
+                if (isFilterAp) {
+                    return isProduct
+                        ? "product_filtered_color"
+                        : "filtered_color";
+                } else {
+                    return isProduct ? "product_grow" : "grow";
+                }
             }
         }
     };
@@ -187,7 +211,9 @@
                             id={appellationInfos.usedAppellation.id}
                             title={appellationInfos.usedAppellation.title}
                             d={appellationInfos.usedAppellation.d}
-                            class={isFiteredEnlarge ? 'enlarge_filtered_color' : 'enlarge_color'}
+                            class={isFiteredEnlarge
+                                ? "enlarge_filtered_color"
+                                : "enlarge_color"}
                         ></path>
                     </g>
                 </g>
@@ -207,14 +233,22 @@
         transform-box: fill-box;
     }
 
+    .product_grow {
+        fill: #eab308;
+        stroke: #fef08a;
+        stroke-width: 2px;
+        transform: scale(1);
+        transform-origin: 50% 50%;
+        transition: 0.3s;
+        transform-box: fill-box;
+    }
+
     .grow:focus {
         outline: none;
     }
 
     .grow_inactive {
         fill: #0f766e;
-        /* stroke: #0f766e;
-        stroke-width: 2px; */
         transform: scale(1);
         transform-origin: 50% 50%;
         transition: 0.3s;
@@ -231,6 +265,32 @@
         transition: 0.3s;
         transform-box: fill-box;
     }
+
+    .product_filtered_color {
+        fill: #f97316;
+        stroke: #fdba74;
+        stroke-width: 2px;
+        transform: scale(1);
+        transform-origin: 50% 50%;
+        transition: 0.3s;
+        transform-box: fill-box;
+    }
+
+    .spotted_color {
+        fill: #5eead4 !important;
+        transform: scale(1);
+        transform-origin: 50% 50%;
+        transition: 0.6s;
+        transform-box: fill-box;
+    }
+    .product_spotted_color {
+        fill: #fde047 !important;
+        transform: scale(1);
+        transform-origin: 50% 50%;
+        transition: 0.6s;
+        transform-box: fill-box;
+    }
+
     .spotted_filtered_color {
         fill: #fca5a5;
         stroke: #991b1b;
@@ -241,13 +301,13 @@
         transform-box: fill-box;
     }
 
-    .spotted_color {
-        fill: #5eead4 !important;
-        /* stroke: #042f2e;
-        stroke-width: 1px; */
+    .product_spotted_filtered_color {
+        fill: #fdba74;
+        stroke: #f97316;
+        stroke-width: 2px;
         transform: scale(1);
         transform-origin: 50% 50%;
-        transition: 0.6s;
+        transition: 0.3s;
         transform-box: fill-box;
     }
 

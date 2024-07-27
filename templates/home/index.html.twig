@@ -4,5 +4,5 @@
 {% endblock %}
 
 {% block body %}
-	<div {{ svelte_component('Home') }}></div>
+	<div {{ svelte_component('Home', {'is_user': app.user ?? null} ) }}></div>
 {% endblock %}

@@ -13,7 +13,6 @@
         }));
     }
 
-
 </script>
 
 {#if dataManagement.grapevarietys != null}
@@ -29,6 +28,7 @@
                 <MultiSelect
                     bind:value={filterValue}
                     options={multiselectOptions}
+                    closeDropdownOnSelect={true}
                     placeholder="Cépages"
                 />
             </div>

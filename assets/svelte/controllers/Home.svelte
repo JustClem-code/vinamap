@@ -2,6 +2,8 @@
     import axios from "axios";
     import { onMount } from "svelte";
 
+    export let is_user;
+
     import MapComponent from "./MapComponent/MapComponent.svelte";
     import MapList from "./MapComponent/MapList.svelte";
     import MapInfo from "./MapComponent/MapInfo.svelte";
@@ -28,27 +30,12 @@
         wineregions: null,
         grapevarietys: null,
         subwineregion: null,
+        product: null,
     };
 
     let filterValue = [];
 
     let filterApArray = [];
-
-    function grapeFilter(ar) {
-        filterApArray = ar.filter(({ grapevarietyCollection }) => {
-            return grapevarietyCollection.some(({ grapevarietyId }) => {
-                return filterValue.some((f) => {
-                    return f.value === grapevarietyId;
-                });
-            });
-        });
-    }
-
-    $: if (filterValue.length) {
-        grapeFilter(dataManagement.appellations);
-    } else {
-        filterApArray = [];
-    }
 
     let filterItems = null;
 
@@ -58,9 +45,17 @@
             getWineregion(),
             getGrapeVariety(),
             getSubwineregion(),
+            getProduct(),
         ]);
         dataMap.onLoad = false;
     });
+
+    $: if (filterValue.length) {
+        grapeFilter(dataManagement.appellations);
+    } else {
+        filterApArray = [];
+    }
+
 
     $: if (dataMap.isZoomable) {
         filterItems = dataManagement.appellations
@@ -75,6 +70,8 @@
             a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
         );
     }
+
+    // GET
 
     async function getAppellation() {
         const response = await axios.get(`https://localhost/getappellations`);
@@ -92,6 +89,13 @@
         const response = await axios.get(`https://localhost/getsubwineregions`);
         dataManagement.subwineregion = response.data;
     }
+    async function getProduct() {
+        if (!is_user) {
+            return
+        }
+        const response = await axios.get(`https://localhost/getproducts`);
+        dataManagement.product = response.data;
+    }
 
     // METHODS
 
@@ -103,6 +107,18 @@
         );
     }
 
+
+
+    function grapeFilter(ar) {
+        filterApArray = ar.filter(({ grapevarietyCollection }) => {
+            return grapevarietyCollection.some(({ grapevarietyId }) => {
+                return filterValue.some((f) => {
+                    return f.value === grapevarietyId;
+                });
+            });
+        });
+    }
+
     function toggleRegion(spot) {
         if (dataMap.isZoomable) {
             return;
@@ -111,7 +127,6 @@
     }
 
     function toggleAppellation(spot, appellation) {
-
         if (
             !dataMap.isZoomable ||
             dataMap.isVisible ||
@@ -190,6 +205,7 @@
         bind:dataMap
         bind:currentMatrix
         bind:filterApArray
+        {dataManagement}
         {compareName}
         {toggleRegion}
         {toggleAppellation}
@@ -220,6 +236,7 @@
                 bind:dataMap
                 bind:filterItems
                 bind:filterApArray
+                {dataManagement}
                 {compareName}
                 {toggleRegion}
                 {toggleAppellation}

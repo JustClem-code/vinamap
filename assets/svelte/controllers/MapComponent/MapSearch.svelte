@@ -79,6 +79,7 @@
                     placeholder="Appellation"
                     maxSelect="1"
                     showOptions={true}
+                    closeDropdownOnSelect={true}
                     disabled={(dataMap.isZoomable || dataMap.isVisible) &&
                         !dataMap.isSearchable}
                 />

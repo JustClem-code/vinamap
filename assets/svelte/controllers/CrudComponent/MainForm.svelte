@@ -260,7 +260,7 @@
                         </div>
                     {/if}
                     {#if item.review && item.review != ""}
-                        <div class="pl-4 text-teal-500">
+                        <div class="pl-4 text-yellow-500">
                              Is reviewed
                         </div>
                     {/if}

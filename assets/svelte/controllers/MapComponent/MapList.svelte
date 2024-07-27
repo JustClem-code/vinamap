@@ -6,13 +6,23 @@
     export let filterItems;
     export let filterApArray;
 
+    export let dataManagement;
     export let compareName;
     export let toggleRegion;
     export let toggleAppellation;
 
     export let zoomOnregion;
-
     export let enLarge;
+
+    $: products = dataManagement.product;
+
+    $: isProduct = (item) => {
+        let filterProducts = products?.find(
+            (p) => p.appellationName == item.name,
+        );
+
+        return filterProducts ? "border-4 border-yellow-500" : "";
+    };
 
     $: spotted = (item) => {
         let isFilterAp = filterApArray?.find(
@@ -96,7 +106,7 @@
                     }}
                     class="inline-block rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2 {spotted(
                         item,
-                    )}"
+                    )} {isProduct(item)}"
                 >
                     {item.name}
                 </button>

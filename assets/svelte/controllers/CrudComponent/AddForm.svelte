@@ -14,7 +14,7 @@
         value2: [],
         value3: 0,
         manufacturer: "",
-        vintage: null,
+        vintage: 2020,
         review: null,
     };
 

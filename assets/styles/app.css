@@ -3,10 +3,31 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    :root {
+        --color-gray-700: #374151;
+        --color-gray-500: #6b7280;
+        --color-gray-400: #9ca3af;
+        --color-gray-100: #f3f4f6;
+        --color-gray-50: #f9fafb;
+        --color-teal-950: #042f2e;
+        --color-teal-800: #115e59;
+        --color-teal-700: #0f766e;
+        --color-teal-300: #5eead4;
+        --color-red-800: #991b1b;
+        --color-red-300: #fca5a5;
+        --color-yellow-500: #eab308;
+        --color-yellow-300: #fde047;
+        --color-yellow-200: #fef08a;
+        --color-orange-500: #f97316;
+        --color-orange-300: #fdba74;
+    }
+}
+
 :root {
     --night: #0b0b1b;
     --blue: cornflowerblue;
-    
+
     --text-color: #ccc;
 
     --sms-padding: 0.75rem;
@@ -16,24 +37,24 @@
     --sms-active-color: rgba(255, 255, 255, 0.1);
 
     --sms-border: none;
-    --sms-focus-border: 1pt solid #6b7280;
+    --sms-focus-border: 1pt solid var(--color-gray-500);
 
-    --sms-selected-bg: #374151;
-    --sms-selected-text-color: #f8fafc;
+    --sms-selected-bg: var(--color-gray-700);
+    --sms-selected-text-color: var(--color-gray-50);
 
-    --sms-options-bg: #f8fafc;
+    --sms-options-bg: var(--color-gray-50);
 
-    --sms-text-color: #374151;
+    --sms-text-color: var(--color-gray-700);
 
-    --sms-li-active-bg: #f1f5f9;
+    --sms-li-active-bg: #f3f4f6;
 
-    --sms-li-selected-bg: #374151;
-    --sms-li-selected-color: #f8fafc;
+    --sms-li-selected-bg: var(--color-gray-700);
+    --sms-li-selected-color: var(--color-gray-50);
 
-    --sms-disabled-bg: #0f766e;
+    --sms-disabled-bg: var(--color-teal-700);
     --sms-li-disabled-bg: black;
 
-    --sms-placeholder-color: #9ca3af;
+    --sms-placeholder-color: var(--color-gray-400);
 
 }
 

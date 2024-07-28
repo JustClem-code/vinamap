@@ -105,7 +105,7 @@
                 id="g9344"
                 transform="matrix(.59034 0 0 -.59034 -7853 3751.4)"
                 fill="#0d9488"
-                stroke="#042f2e"
+                stroke="var(--color-teal-950)"
                 stroke-width="37.5"
             >
                 <path
@@ -194,7 +194,7 @@
                 y=".4257"
                 width="1999.1"
                 height="1999.1"
-                fill="#042f2e"
+                fill="var(--color-teal-950)"
                 fill-opacity=".5"
                 stroke-width=".85138"
             />
@@ -224,8 +224,8 @@
 
 <style>
     .grow {
-        fill: #115e59;
-        stroke: #5eead4;
+        fill: var(--color-teal-800);
+        stroke: var(--color-teal-300);
         stroke-width: 2px;
         transform: scale(1);
         transform-origin: 50% 50%;
@@ -234,8 +234,8 @@
     }
 
     .product_grow {
-        fill: #eab308;
-        stroke: #fef08a;
+        fill: var(--color-yellow-500);
+        stroke: var(--color-yellow-200);
         stroke-width: 2px;
         transform: scale(1);
         transform-origin: 50% 50%;
@@ -248,7 +248,7 @@
     }
 
     .grow_inactive {
-        fill: #0f766e;
+        fill: var(--color-teal-700);
         transform: scale(1);
         transform-origin: 50% 50%;
         transition: 0.3s;
@@ -257,8 +257,8 @@
     }
 
     .filtered_color {
-        fill: #991b1b;
-        stroke: #fca5a5;
+        fill: var(--color-red-800);
+        stroke: var(--color-red-300);
         stroke-width: 2px;
         transform: scale(1);
         transform-origin: 50% 50%;
@@ -267,8 +267,8 @@
     }
 
     .product_filtered_color {
-        fill: #f97316;
-        stroke: #fdba74;
+        fill: var(--color-orange-500);
+        stroke: var(--color-orange-300);
         stroke-width: 2px;
         transform: scale(1);
         transform-origin: 50% 50%;
@@ -277,14 +277,14 @@
     }
 
     .spotted_color {
-        fill: #5eead4 !important;
+        fill: var(--color-teal-300) !important;
         transform: scale(1);
         transform-origin: 50% 50%;
         transition: 0.6s;
         transform-box: fill-box;
     }
     .product_spotted_color {
-        fill: #fde047 !important;
+        fill: var(--color-yellow-300) !important;
         transform: scale(1);
         transform-origin: 50% 50%;
         transition: 0.6s;
@@ -292,8 +292,8 @@
     }
 
     .spotted_filtered_color {
-        fill: #fca5a5;
-        stroke: #991b1b;
+        fill: var(--color-red-300);
+        stroke: var(--color-red-800);
         stroke-width: 2px;
         transform: scale(1);
         transform-origin: 50% 50%;
@@ -302,8 +302,8 @@
     }
 
     .product_spotted_filtered_color {
-        fill: #fdba74;
-        stroke: #f97316;
+        fill: var(--color-orange-300);
+        stroke: var(--color-orange-500);
         stroke-width: 2px;
         transform: scale(1);
         transform-origin: 50% 50%;
@@ -312,8 +312,8 @@
     }
 
     .enlarge_color {
-        fill: #5eead4 !important;
-        stroke: #042f2e;
+        fill: var(--color-teal-300) !important;
+        stroke: var(--color-teal-950);
         stroke-width: 2px;
         transform: scale(2);
         transform-origin: 50% 50%;
@@ -322,8 +322,8 @@
     }
 
     .enlarge_filtered_color {
-        fill: #fca5a5 !important;
-        stroke: #991b1b;
+        fill: var(--color-red-300) !important;
+        stroke: var(--color-red-800);
         stroke-width: 2px;
         transform: scale(2);
         transform-origin: 50% 50%;

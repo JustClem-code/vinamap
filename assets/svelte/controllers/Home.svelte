@@ -9,6 +9,7 @@
     import MapInfo from "./MapComponent/MapInfo.svelte";
     import MapFilter from "./MapComponent/MapFilter.svelte";
     import MapSearch from "./MapComponent/MapSearch.svelte";
+    import MapProduct from "./MapComponent/MapProduct.svelte";
 
     let appellationInfos = {
         usedSpot: null,
@@ -50,12 +51,15 @@
         dataMap.onLoad = false;
     });
 
+    $: filterProducts = dataManagement.product?.filter(
+        (p) => p.appellationName == appellationInfos.usedAppellation?.name,
+    );
+
     $: if (filterValue.length) {
         grapeFilter(dataManagement.appellations);
     } else {
         filterApArray = [];
     }
-
 
     $: if (dataMap.isZoomable) {
         filterItems = dataManagement.appellations
@@ -91,7 +95,7 @@
     }
     async function getProduct() {
         if (!is_user) {
-            return
+            return;
         }
         const response = await axios.get(`https://localhost/getproducts`);
         dataManagement.product = response.data;
@@ -106,8 +110,6 @@
             }) === 0
         );
     }
-
-
 
     function grapeFilter(ar) {
         filterApArray = ar.filter(({ grapevarietyCollection }) => {
@@ -229,7 +231,10 @@
         ></MapSearch>
         <MapFilter {dataManagement} bind:filterValue></MapFilter>
         {#if dataMap.isVisible}
-            <MapInfo {appellationInfos} {reduce}></MapInfo>
+            <MapInfo {appellationInfos} {reduce} {filterValue}></MapInfo>
+            {#if filterProducts.length}
+                <MapProduct {filterProducts} />
+            {/if}
         {:else}
             <MapList
                 bind:appellationInfos

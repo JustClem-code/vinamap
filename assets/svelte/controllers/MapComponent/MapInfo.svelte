@@ -1,19 +1,28 @@
 <script>
-    import axios from "axios";
     import { onMount } from "svelte";
 
     export let appellationInfos;
     export let reduce;
+    export let filterValue;
 
     let appellation = appellationInfos.usedAppellation;
 
     let nameSearch = appellation.name.toLowerCase();
 
+    let loadWiki = false;
+
     onMount(async () => {
         await getWikiText();
+        loadWiki = true;
     });
-
+    
     $: wiki = "";
+
+    $: isGrape = (grapeName) => {
+        let result = filterValue.find((grape) => grape.label == grapeName);
+        return result ? "bg-red-200 text-red-700" : "bg-gray-200 text-gray-700";
+    };
+
 
     async function getWikiText() {
         let response = await fetch(
@@ -28,19 +37,22 @@
 
         wiki = extractAPIContents(jsonContent);
 
-        if ((wiki[0]?.includes("\x3C!--") || (wiki[0] == null))) {
+        if (wiki[0]?.includes("\x3C!--") || wiki[0] == null) {
             response = await fetch(
                 `https://fr.wikipedia.org/w/api.php?action=query&origin=*&prop=extracts&format=json&exintro=&titles=${nameSearch}`,
             );
             let jsonContent = await response.json();
 
             wiki = extractAPIContents(jsonContent);
-            if ((wiki[0]?.includes("\x3C!--")) || (wiki[0] == '') || (!wiki[0]?.includes("vin"))) {
-                wiki[0] = null
+            if (
+                wiki[0]?.includes("\x3C!--") ||
+                wiki[0] == "" ||
+                !wiki[0]?.includes("vin")
+            ) {
+                wiki[0] = null;
             }
-
-        } else if (wiki[0] == '') {
-            wiki[0] = null
+        } else if (wiki[0] == "") {
+            wiki[0] = null;
         }
     }
 </script>
@@ -67,20 +79,38 @@
             </button>
         </div>
         <div class="font-bold text-xl mb-2">{appellation.name}</div>
-        {#if wiki[0] != null}
-            <p class="text-gray-700 text-base mb-1">{@html wiki}</p>
-            <p>Source : Wikipedia</p>
+        {#if loadWiki}
+            {#if wiki[0] != null}
+                <p class="text-gray-700 text-base mb-1">{@html wiki}</p>
+                <p>Source : Wikipedia</p>
+            {:else}
+                <p class="text-gray-700 text-base">
+                    Pas de description de Wikipedia pour le moment :/
+                </p>
+            {/if}
         {:else}
-            <p class="text-gray-700 text-base">
-                Pas de description de Wikipedia pour le moment :/
-            </p>
+            <div class="pl-4 flex items-center wrap gap-1">
+                <div
+                    class="animate-pulse h-2 w-2 bg-slate-400 rounded-full"
+                ></div>
+                <div
+                    class="animate-pulse h-4 w-20 bg-slate-400 rounded-full"
+                ></div>
+                <div
+                    class="animate-pulse h-4 w-10 bg-slate-400 rounded-full"
+                ></div>
+                <div
+                    class="animate-pulse h-4 w-4 bg-slate-400 rounded-full"
+                ></div>
+            </div>
         {/if}
     </div>
     <div class="px-6 pt-4 pb-2">
         {#each appellation?.grapevarietyCollection as grape}
             <span
-                class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                >{grape.grapevarietyName}</span
+                class="inline-block rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2 {isGrape(
+                    grape.grapevarietyName,
+                )}">{grape.grapevarietyName}</span
             >
         {/each}
     </div>

@@ -1,10 +1,13 @@
 # Production environment override
 services:
   php:
+    env_file: 
+      - .env.local
     build:
       context: .
       target: frankenphp_prod
     environment:
+      SERVER_NAME: ${SERVER_NAME}
       APP_SECRET: ${APP_SECRET}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}

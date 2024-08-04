@@ -53,6 +53,8 @@ Deploy keys are also [supported by GitLab](https://docs.gitlab.com/ee/user/proje
 
 Example with Git:
 
+/root/.ssh/id_rsa.pub
+
 ```console
 git clone git@github.com:<username>/<project-name>.git
 ```

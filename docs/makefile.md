@@ -40,9 +40,9 @@ DOCKER_COMP = docker compose
 PHP_CONT = $(DOCKER_COMP) exec php
 
 # Executables
-PHP      = $(PHP_CONT) php
-COMPOSER = $(PHP_CONT) composer
-SYMFONY  = $(PHP) bin/console
+PHP      = $(PHP_CONT) php         
+COMPOSER = $(PHP_CONT) composer    # docker compose exec php composer
+SYMFONY  = $(PHP) bin/console      # docker compose exec php php bin/console
 
 # Misc
 .DEFAULT_GOAL = help

@@ -3,5 +3,7 @@
   "build/app.js": "/build/app.js",
   "build/runtime.js": "/build/runtime.js",
   "build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_core-js_modules_es_ar-c4a267.js": "/build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_core-js_modules_es_ar-c4a267.js",
-  "build/images/map-france.png": "/build/images/map-france.0c6f5e3c.png"
+  "build/images/map-france.png": "/build/images/map-france.0c6f5e3c.png",
+  "build/images/burger.ico": "/build/images/burger.8211eced.ico",
+  "build/images/logo-vinamap-white.png": "/build/images/logo-vinamap-white.24e16ac9.png"
 }

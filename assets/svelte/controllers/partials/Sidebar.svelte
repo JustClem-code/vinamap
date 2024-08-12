@@ -5,7 +5,6 @@
     export let open = false;
     export let is_user;
 
-    import img from "./../../../images/map-france.png";
 </script>
 
 <aside

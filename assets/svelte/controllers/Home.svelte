@@ -232,7 +232,7 @@
         <MapFilter {dataManagement} bind:filterValue></MapFilter>
         {#if dataMap.isVisible}
             <MapInfo {appellationInfos} {reduce} {filterValue}></MapInfo>
-            {#if filterProducts.length}
+            {#if is_user && filterProducts.length}
                 <MapProduct {filterProducts} />
             {/if}
         {:else}

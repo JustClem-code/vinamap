@@ -23,7 +23,7 @@
     });
 
     async function getWineregion() {
-        const response = await axios.get(`https://localhost/getwineregions`);
+        const response = await axios.get(`/getwineregions`);
         dataManagement.options.items = response.data;
     }
 </script>

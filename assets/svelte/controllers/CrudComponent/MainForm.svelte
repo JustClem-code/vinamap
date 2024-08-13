@@ -82,7 +82,7 @@
 
     async function getItems() {
         const response = await axios.get(
-            `https://localhost/get${dataManagement.controller}s`,
+            `/get${dataManagement.controller}s`,
         );
         items.set(response.data);
         onLoad = false;
@@ -91,7 +91,7 @@
 
     async function createItem(formData) {
         await axios
-            .post(`https://localhost/create${dataManagement.controller}`, {
+            .post(`/create${dataManagement.controller}`, {
                 formData,
             })
             .then((res) => {
@@ -110,7 +110,7 @@
     async function editItem(formData) {
         await axios
             .post(
-                `https://localhost/update${dataManagement.controller}/${formData.id}`,
+                `/update${dataManagement.controller}/${formData.id}`,
                 {
                     formData
                 },
@@ -133,7 +133,7 @@
     async function deleteItem(id) {
         await axios
             .post(
-                `https://localhost/delete${dataManagement.controller}/${id}`,
+                `/delete${dataManagement.controller}/${id}`,
                 {
                     method: "DELETE",
                 },

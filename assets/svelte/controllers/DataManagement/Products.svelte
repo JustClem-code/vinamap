@@ -26,7 +26,7 @@
     });
 
     async function getAppellation() {
-        const response = await axios.get(`https://localhost/getappellations`);
+        const response = await axios.get(`/getappellations`);
         dataManagement.options.items = response.data;
     }
 </script>

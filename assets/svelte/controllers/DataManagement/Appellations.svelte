@@ -27,15 +27,15 @@
     });
 
     async function getWineregion() {
-        const response = await axios.get(`https://localhost/getwineregions`);
+        const response = await axios.get(`/getwineregions`);
         dataManagement.options.items = response.data;
     }
     async function getGrapeVariety() {
-        const response = await axios.get(`https://localhost/getgrapevarietys`);
+        const response = await axios.get(`/getgrapevarietys`);
         dataManagement.options.items2 = response.data;
     }
     async function getSubwineregion() {
-        const response = await axios.get(`https://localhost/getsubwineregions`);
+        const response = await axios.get(`/getsubwineregions`);
         dataManagement.options.items3 = response.data;
     }
 </script>

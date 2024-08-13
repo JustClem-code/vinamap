@@ -78,26 +78,26 @@
     // GET
 
     async function getAppellation() {
-        const response = await axios.get(`https://localhost/getappellations`);
+        const response = await axios.get(`/getappellations`);
         dataManagement.appellations = response.data;
     }
     async function getWineregion() {
-        const response = await axios.get(`https://localhost/getwineregions`);
+        const response = await axios.get(`/getwineregions`);
         dataManagement.wineregions = response.data;
     }
     async function getGrapeVariety() {
-        const response = await axios.get(`https://localhost/getgrapevarietys`);
+        const response = await axios.get(`/getgrapevarietys`);
         dataManagement.grapevarietys = response.data;
     }
     async function getSubwineregion() {
-        const response = await axios.get(`https://localhost/getsubwineregions`);
+        const response = await axios.get(`/getsubwineregions`);
         dataManagement.subwineregion = response.data;
     }
     async function getProduct() {
         if (!is_user) {
             return;
         }
-        const response = await axios.get(`https://localhost/getproducts`);
+        const response = await axios.get(`/getproducts`);
         dataManagement.product = response.data;
     }
 

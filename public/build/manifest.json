@@ -1,9 +1,7 @@
 {
-  "build/app.css": "/build/app.css",
-  "build/app.js": "/build/app.js",
-  "build/runtime.js": "/build/runtime.js",
-  "build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_core-js_modules_es_ar-c4a267.js": "/build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_core-js_modules_es_ar-c4a267.js",
-  "build/images/map-france.png": "/build/images/map-france.0c6f5e3c.png",
-  "build/images/burger.ico": "/build/images/burger.8211eced.ico",
+  "build/app.css": "/build/app.cc8d8ff3.css",
+  "build/app.js": "/build/app.de11640c.js",
+  "build/runtime.js": "/build/runtime.188fa053.js",
+  "build/56.719b3fea.js": "/build/56.719b3fea.js",
   "build/images/logo-vinamap-white.png": "/build/images/logo-vinamap-white.24e16ac9.png"
 }
